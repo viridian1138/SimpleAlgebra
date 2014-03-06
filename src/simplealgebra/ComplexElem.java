@@ -22,7 +22,8 @@
 
 package simplealgebra;
 
-public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<ComplexElem<R,S>, ComplexElemFactory<R,S>> {
+public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<ComplexElem<R,S>, ComplexElemFactory<R,S>> 
+	implements Mutable<ComplexElem<R,S>, ComplexElem<R,S>, R> {
 
 	@Override
 	public ComplexElem<R, S> add(ComplexElem<R, S> b) {
@@ -41,6 +42,11 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> extend
 	@Override
 	public ComplexElem<R, S> negate() {
 		return( new ComplexElem<R,S>( re.negate() , im.negate() ) );
+	}
+	
+	@Override
+	public ComplexElem<R, S> mutate( Mutator<R> mutr ) {
+		return( new ComplexElem<R,S>( mutr.mutate( re ) , mutr.mutate( im ) ) );
 	}
 
 	@Override

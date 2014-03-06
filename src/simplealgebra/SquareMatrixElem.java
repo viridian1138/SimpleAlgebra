@@ -29,7 +29,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> {
+public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> 
+	implements Mutable<SquareMatrixElem<U,R,S>, SquareMatrixElem<U,R,S>, R> {
 
 	
 	public SquareMatrixElem( S _fac , U _dim )
@@ -151,6 +152,28 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 		}
 		return( ret );
 	}
+	
+	
+	@Override
+	public SquareMatrixElem<U, R, S> mutate( Mutator<R> mutr ) {
+		SquareMatrixElem<U,R,S> ret = new SquareMatrixElem<U,R,S>(fac,dim);
+		Iterator<BigInteger> rowi = rowMap.keySet().iterator();
+		while( rowi.hasNext() )
+		{
+			BigInteger row = rowi.next();
+			HashMap<BigInteger,R> subMap = rowMap.get( row );
+			Iterator<BigInteger> coli = subMap.keySet().iterator();
+			while( coli.hasNext() )
+			{
+				BigInteger col = coli.next();
+				R vali = subMap.get( col );
+				ret.setVal(row, col, mutr.mutate( vali ) );
+			}
+		}
+		return( ret );
+	}
+	
+	
 
 	@Override
 	public SquareMatrixElem<U, R, S> invert() throws NotInvertibleException {

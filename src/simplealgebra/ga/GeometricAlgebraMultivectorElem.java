@@ -33,10 +33,13 @@ import java.util.TreeSet;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
+import simplealgebra.Mutable;
+import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.NumDimensions;
 
-public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> {
+public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> 
+	implements Mutable<GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElem<U,R,S>, R> {
 
 	
 	public GeometricAlgebraMultivectorElem( S _fac , U _dim )
@@ -207,6 +210,20 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			HashSet<BigInteger> el = it.next();
 			R vali = map.get( el );
 			ret.setVal(el, vali.negate() );
+		}
+		return( ret );
+	}
+	
+	
+	@Override
+	public GeometricAlgebraMultivectorElem<U, R, S> mutate( Mutator<R> mutr ) {
+		GeometricAlgebraMultivectorElem<U,R,S> ret = new GeometricAlgebraMultivectorElem<U,R,S>(fac,dim);
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> el = it.next();
+			R vali = map.get( el );
+			ret.setVal(el, mutr.mutate( vali ) );
 		}
 		return( ret );
 	}
