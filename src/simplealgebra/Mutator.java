@@ -29,7 +29,7 @@ package simplealgebra;
 
 
 
-public interface Mutator<T extends Elem> {
+public interface Mutator<T extends Elem<T,?>> {
 
 	public T mutate( T in );
 	

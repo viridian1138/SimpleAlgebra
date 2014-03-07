@@ -22,8 +22,9 @@
 
 package simplealgebra;
 
-public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<ComplexElem<R,S>, ComplexElemFactory<R,S>> 
-	implements Mutable<ComplexElem<R,S>, ComplexElem<R,S>, R> {
+public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> 
+	extends MutableElem<R,ComplexElem<R,S>,ComplexElemFactory<R,S>>
+	{
 
 	@Override
 	public ComplexElem<R, S> add(ComplexElem<R, S> b) {

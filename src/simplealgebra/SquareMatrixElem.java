@@ -29,8 +29,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> 
-	implements Mutable<SquareMatrixElem<U,R,S>, SquareMatrixElem<U,R,S>, R> {
+public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends 
+	MutableElem<R,SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> {
 
 	
 	public SquareMatrixElem( S _fac , U _dim )

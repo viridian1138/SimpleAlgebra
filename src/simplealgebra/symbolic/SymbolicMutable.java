@@ -28,18 +28,18 @@ package simplealgebra.symbolic;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
-import simplealgebra.Mutable;
+import simplealgebra.MutableElem;
 import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 
-public class SymbolicMutable<R extends Elem<R,?>, S extends ElemFactory<R,S>, T extends Elem<T,?>> extends SymbolicElem<R,S> 
+public class SymbolicMutable<T extends Elem<T,?>, U extends MutableElem<T,U,?>, R extends ElemFactory<U,R> > extends SymbolicElem<U,R> 
 {
 	
-	private SymbolicElem<R,S> elemA;
-	private Mutator<T> elemB;
+	private SymbolicElem<U,R> elemA;
+	private Mutator<U> elemB;
 
 	
-	public SymbolicMutable( SymbolicElem<R,S> _elemA , Mutator<T> _elemB , S _fac )
+	public SymbolicMutable( SymbolicElem<U,R> _elemA , Mutator<U> _elemB , R _fac )
 	{
 		super( _fac );
 		elemA = _elemA;
@@ -47,10 +47,10 @@ public class SymbolicMutable<R extends Elem<R,?>, S extends ElemFactory<R,S>, T 
 	}
 	
 	@Override
-	public R eval( ) throws NotInvertibleException {
-		final R evl = elemA.eval();
-		Mutable<?,R,T> mutr = (Mutable<?,R,T>) evl;
-		return( mutr.mutate( elemB ) );
+	public U eval( ) throws NotInvertibleException {
+		final U evl = elemA.eval();
+		final U mutr = elemB.mutate( evl );
+		return( mutr );
 	}
 
 	@Override

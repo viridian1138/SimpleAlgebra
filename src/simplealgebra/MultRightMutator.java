@@ -2,6 +2,7 @@
 
 
 
+
 //$$strtCprt
 /**
 * Simple Algebra 
@@ -22,22 +23,30 @@
 
 
 
+
 package simplealgebra;
 
+public class MultRightMutator<T extends Elem<T,?>> implements Mutator<T> {
+	
+	public MultRightMutator( T _elem , String _name )
+	{
+		elem = _elem;
+		name = _name;
+	}
 
-public abstract class Elem<T extends Elem<T,?>, R extends ElemFactory<T,R>> {
+	@Override
+	public T mutate(T in) {
+		return( in.mult( elem ) );
+	}
 
-	public abstract T add( T b );
-	
-	public abstract T mult( T b );
-	
-	public abstract T negate( );
-	
-	public abstract T invert( ) throws NotInvertibleException;
-	
-	public abstract T divideBy( int val );
-	
-	public abstract R getFac();
+	@Override
+	public String writeString() {
+		return( "multRight[ " + name + " ]" );
+	}
+
+	private T elem;
+	private String name;
 	
 }
+
 

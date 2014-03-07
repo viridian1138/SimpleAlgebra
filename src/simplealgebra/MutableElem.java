@@ -2,6 +2,7 @@
 
 
 
+
 //$$strtCprt
 /**
 * Simple Algebra 
@@ -22,22 +23,35 @@
 
 
 
+
 package simplealgebra;
 
 
-public abstract class Elem<T extends Elem<T,?>, R extends ElemFactory<T,R>> {
 
-	public abstract T add( T b );
+public abstract class MutableElem<T extends Elem<T,?>, U extends MutableElem<T,U,?>, R extends ElemFactory<U,R> > 
+	extends Elem<U,R> implements Mutable<U,U,T> 
+{
+
 	
-	public abstract T mult( T b );
+	public Mutator<U> createElemMutator( final Mutator<T> elem )
+	{
+		final Mutator<U> ret = new Mutator<U>()
+		{
+
+			@Override
+			public U mutate(U in) {
+				return( in.mutate( elem ) );
+			}
+
+			@Override
+			public String writeString() {
+				return( "mutateElem[ " + elem.writeString() + " ]" );
+			}
+			
+		};
+		return( ret );
+	}
 	
-	public abstract T negate( );
-	
-	public abstract T invert( ) throws NotInvertibleException;
-	
-	public abstract T divideBy( int val );
-	
-	public abstract R getFac();
 	
 }
 

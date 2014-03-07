@@ -27,6 +27,7 @@
 
 package simplealgebra.bigfixedpoint;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import simplealgebra.Elem;
@@ -40,9 +41,10 @@ public class BigFixedPointElem<T extends Precision> extends Elem<BigFixedPointEl
 		prec = _prec;
 	}
 	
-	public BigFixedPointElem( double vl , T _prec ) // Note: Careful!!! Conversion only works with small values.
+	public BigFixedPointElem( double vl , T _prec ) 
 	{
-		final BigInteger _val = BigInteger.valueOf( (long)( vl * prec.getVal().doubleValue() ) );
+		final BigDecimal bd = new BigDecimal( vl * prec.getVal().doubleValue() );
+		final BigInteger _val = bd.toBigInteger();
 		val = _val;
 		prec = _prec;
 	}

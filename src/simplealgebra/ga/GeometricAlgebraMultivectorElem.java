@@ -33,13 +33,13 @@ import java.util.TreeSet;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
-import simplealgebra.Mutable;
+import simplealgebra.MutableElem;
 import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.NumDimensions;
 
-public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> 
-	implements Mutable<GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElem<U,R,S>, R> {
+public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> 
+	extends MutableElem<R, GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElemFactory<U,R,S>>  {
 
 	
 	public GeometricAlgebraMultivectorElem( S _fac , U _dim )
