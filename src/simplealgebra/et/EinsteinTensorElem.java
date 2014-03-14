@@ -83,13 +83,40 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 	@Override
 	public EinsteinTensorElem<Z, R, S> mult(EinsteinTensorElem<Z, R, S> b) {
 		
-		ArrayList<Integer> matchIndices = null; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		ArrayList<Integer> matchIndicesA = null; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		ArrayList<Integer> matchIndicesB = null; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		ArrayList<Integer> nonMatchIndices = null; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		
-		HashMap<ArrayList<BigInteger>,ArrayList<ArrayList<BigInteger>>> matchMap = buildSummationIndexMap( b , matchIndices );
+		HashMap<ArrayList<BigInteger>,ArrayList<ArrayList<BigInteger>>> matchMap = buildSummationIndexMap( b , matchIndicesB );
 		
 		EinsteinTensorElem<Z,R,S> ret = null;
 		
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
+		
+		while( it.hasNext() )
+		{
+			ArrayList<BigInteger> key = it.next();
+			final R val = map.get(key);
+			ArrayList<BigInteger> matchMapKey = buildSummationIndex( key , matchIndicesA );
+			Iterator<ArrayList<BigInteger>> ita = matchMap.get(matchMapKey).iterator();
+			while( ita.hasNext() )
+			{
+				ArrayList<BigInteger> bkey = ita.next();
+				final R bval = b.map.get( bkey );
+				final R muval = val.mult( bval );
+				final ArrayList<BigInteger> combinedAB = buildCombinedAB( key , bkey );
+				final ArrayList<BigInteger> placeMapKey = buildSummationIndex( combinedAB , nonMatchIndices );
+				final R nval = ret.map.get( placeMapKey );
+				if( nval != null )
+				{
+					ret.map.put(placeMapKey, nval.add( muval ) );
+				}
+				else
+				{
+					ret.map.put(placeMapKey, muval );
+				}
+			}
+		}
 		
 		return( ret );
 	}
@@ -126,14 +153,14 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 	}
 	
 	
-	protected ArrayList<BigInteger> buildSummationIndex( ArrayList<BigInteger> combinedCovariantContravariant , ArrayList<Integer> matchIndices )
+	protected ArrayList<BigInteger> buildSummationIndex( ArrayList<BigInteger> combinedIndices , ArrayList<Integer> matchIndices )
 	{
 		ArrayList<BigInteger> ret = new ArrayList<BigInteger>();
 		
 		Iterator<Integer> it = matchIndices.iterator();
 		while( it.hasNext() )
 		{
-			ret.add( combinedCovariantContravariant.get( it.next() ) );
+			ret.add( combinedIndices.get( it.next() ) );
 		}
 		
 		return( ret );
@@ -171,6 +198,26 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 		}
 		
 		it = contravariantIndices.iterator();
+		while( it.hasNext() )
+		{
+			ret.add( it.next() );
+		}
+		
+		return( ret );
+	}
+	
+	
+	protected ArrayList<BigInteger> buildCombinedAB( ArrayList<BigInteger> akey , ArrayList<BigInteger> bkey )
+	{
+		ArrayList<BigInteger> ret = new ArrayList<BigInteger>();
+		
+		Iterator<BigInteger> it = akey.iterator();
+		while( it.hasNext() )
+		{
+			ret.add( it.next() );
+		}
+		
+		it = bkey.iterator();
 		while( it.hasNext() )
 		{
 			ret.add( it.next() );
