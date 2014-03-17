@@ -24,37 +24,26 @@
 
 
 
-package simplealgebra.symbolic;
+package simplealgebra.ddx;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
-import simplealgebra.NotInvertibleException;
 
-public class SymbolicIdentity<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
+/**
+ * Factory for mapping a directional derivative into its set of constituent partial derivatives.
+ * 
+ * @author thorngreen
+ *
+ * @param <R>
+ * @param <S>
+ * @param <K>
+ */
+public abstract class DirectionalDerivativePartialFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>>
 {
 
-	public SymbolicIdentity( S _fac )
-	{
-		super( _fac );
-	}
-	
-	@Override
-	public R eval( ) {
-		return( fac.identity() );
-	}
-	
-	@Override
-	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException
-	{
-		return( fac.zero() );
-	}
-
-	@Override
-	public String writeString( ) {
-		return( "IDENTITY" );
-	}
+	public abstract PartialDerivativeOp<R,S,K> getPartial( BigInteger basisIndex );
 
 }
 

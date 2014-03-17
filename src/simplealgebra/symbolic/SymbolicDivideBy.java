@@ -24,6 +24,8 @@
 
 package simplealgebra.symbolic;
 
+import java.util.ArrayList;
+
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
@@ -39,8 +41,14 @@ public class SymbolicDivideBy<R extends Elem<R,?>, S extends ElemFactory<R,S>> e
 	}
 	
 	@Override
-	public R eval( ) throws NotInvertibleException {
+	public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
 		return( elem.eval().divideBy( ival ) );
+	}
+	
+	@Override
+	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException, MultiplicativeDistributionRequiredException
+	{
+		return( elem.evalPartialDerivative( withRespectTo ).divideBy( ival ) );
 	}
 
 	@Override

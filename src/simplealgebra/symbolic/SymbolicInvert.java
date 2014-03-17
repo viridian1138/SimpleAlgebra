@@ -27,6 +27,8 @@
 
 package simplealgebra.symbolic;
 
+import java.util.ArrayList;
+
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
@@ -41,8 +43,15 @@ public class SymbolicInvert<R extends Elem<R,?>, S extends ElemFactory<R,S>> ext
 	}
 	
 	@Override
-	public R eval( ) throws NotInvertibleException {
+	public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
 		return( elem.eval().invert() );
+	}
+	
+	@Override
+	public R evalPartialDerivative(ArrayList<Elem<?, ?>> withRespectTo)
+			throws NotInvertibleException, MultiplicativeDistributionRequiredException {
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		return null;
 	}
 
 	@Override

@@ -24,48 +24,52 @@
 
 
 
-package simplealgebra.symbolic;
+package simplealgebra.ddx;
 
 import java.util.ArrayList;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
+import simplealgebra.symbolic.MultiplicativeDistributionRequiredException;
+import simplealgebra.symbolic.SymbolicElem;
 
-public class SymbolicNegate<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
+/**
+ * Implements a partial derivative as used in Calculus.
+ * 
+ * @author thorngreen
+ *
+ * @param <R>
+ * @param <S>
+ * @param <K>
+ */
+public class PartialDerivativeOp<R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> extends DerivativeElem<R,S>
 {
 
-	public SymbolicNegate( SymbolicElem<R,S> _elem , S _fac )
+	public PartialDerivativeOp( S _fac , ArrayList<K> _withRespectTo )
 	{
 		super( _fac );
-		elem = _elem;
+		withRespectTo = _withRespectTo;
 	}
 	
 	@Override
-	public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
-		return( elem.eval().negate() );
-	}
-	
-	@Override
-	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException, MultiplicativeDistributionRequiredException
-	{
-		return( elem.evalPartialDerivative( withRespectTo ).negate() );
-	}
+	public R evalDerivative( SymbolicElem<R,S> in ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
+		return( in.evalPartialDerivative( (ArrayList<Elem<?, ?>>) withRespectTo ) );
+	}	
 
 	@Override
 	public String writeString( ) {
-		return( "negate( " + ( elem.writeString() ) + " )" );
+		return( "partialDerivative( " + ( withRespectTo ) + " )" );
 	}
 	
 	/**
-	 * @return the elem
+	 * @return the withRespectTo
 	 */
-	public SymbolicElem<R, S> getElem() {
-		return elem;
+	public ArrayList<K> getWithRespectTo() {
+		return withRespectTo;
 	}
-
-
-	private SymbolicElem<R,S> elem;
+	
+	private ArrayList<K> withRespectTo;
 
 }
 

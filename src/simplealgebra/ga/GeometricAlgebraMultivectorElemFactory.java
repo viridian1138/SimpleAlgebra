@@ -55,6 +55,12 @@ public class GeometricAlgebraMultivectorElemFactory<U extends NumDimensions, R e
 	}
 	
 	
+	public S getFac()
+	{
+		return( fac );
+	}
+	
+	
 	private S fac;
 	private U dim;
 

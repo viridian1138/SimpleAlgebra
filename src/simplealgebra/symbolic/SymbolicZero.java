@@ -27,8 +27,11 @@
 
 package simplealgebra.symbolic;
 
+import java.util.ArrayList;
+
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
+import simplealgebra.NotInvertibleException;
 
 public class SymbolicZero<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
 {
@@ -42,6 +45,13 @@ public class SymbolicZero<R extends Elem<R,?>, S extends ElemFactory<R,S>> exten
 	public R eval( ) {
 		return( fac.zero() );
 	}
+	
+	@Override
+	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException
+	{
+		return( fac.zero() );
+	}
+	
 
 	@Override
 	public String writeString( ) {

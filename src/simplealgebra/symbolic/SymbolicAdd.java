@@ -24,6 +24,8 @@
 
 package simplealgebra.symbolic;
 
+import java.util.ArrayList;
+
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
@@ -39,8 +41,14 @@ public class SymbolicAdd<R extends Elem<R,?>, S extends ElemFactory<R,S>> extend
 	}
 	
 	@Override
-	public R eval( ) throws NotInvertibleException {
+	public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
 		return( elemA.eval().add( elemB.eval() ) );
+	}
+	
+	@Override
+	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException, MultiplicativeDistributionRequiredException
+	{
+		return( elemA.evalPartialDerivative( withRespectTo ).add( elemB.evalPartialDerivative( withRespectTo ) ) );
 	}
 
 	@Override
@@ -48,6 +56,21 @@ public class SymbolicAdd<R extends Elem<R,?>, S extends ElemFactory<R,S>> extend
 		return( "add( " + ( elemA.writeString() ) + " , " + ( elemB.writeString() ) + " )" );
 	}
 	
+	
+	/**
+	 * @return the elemA
+	 */
+	public SymbolicElem<R, S> getElemA() {
+		return elemA;
+	}
+
+	/**
+	 * @return the elemB
+	 */
+	public SymbolicElem<R, S> getElemB() {
+		return elemB;
+	}
+
 	private SymbolicElem<R,S> elemA;
 	private SymbolicElem<R,S> elemB;
 

@@ -46,6 +46,11 @@ public class SymbolicElemFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>
 		return( new SymbolicZero<R,S>( fac ) );
 	}
 	
+	public S getFac()
+	{
+		return( fac );
+	}
+	
 	private S fac;
 
 }

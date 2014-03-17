@@ -3,6 +3,8 @@
 
 
 
+
+
 //$$strtCprt
 /**
 * Simple Algebra 
@@ -24,37 +26,14 @@
 
 
 
+
+
 package simplealgebra.symbolic;
 
-import java.util.ArrayList;
 
-import simplealgebra.Elem;
-import simplealgebra.ElemFactory;
-import simplealgebra.NotInvertibleException;
 
-public class SymbolicIdentity<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
-{
 
-	public SymbolicIdentity( S _fac )
-	{
-		super( _fac );
-	}
-	
-	@Override
-	public R eval( ) {
-		return( fac.identity() );
-	}
-	
-	@Override
-	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException
-	{
-		return( fac.zero() );
-	}
-
-	@Override
-	public String writeString( ) {
-		return( "IDENTITY" );
-	}
+public class MultiplicativeDistributionRequiredException extends Exception {
 
 }
 

@@ -26,6 +26,8 @@
 
 package simplealgebra.symbolic;
 
+import java.util.ArrayList;
+
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.MutableElem;
@@ -47,10 +49,17 @@ public class SymbolicMutable<T extends Elem<T,?>, U extends MutableElem<T,U,?>, 
 	}
 	
 	@Override
-	public U eval( ) throws NotInvertibleException {
+	public U eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
 		final U evl = elemA.eval();
 		final U mutr = elemB.mutate( evl );
 		return( mutr );
+	}
+	
+	@Override
+	public U evalPartialDerivative(ArrayList<Elem<?, ?>> withRespectTo)
+			throws NotInvertibleException {
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		return null;
 	}
 
 	@Override

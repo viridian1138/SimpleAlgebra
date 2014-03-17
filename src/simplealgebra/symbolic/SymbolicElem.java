@@ -26,13 +26,17 @@
 
 package simplealgebra.symbolic;
 
+import java.util.ArrayList;
+
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
 
 public abstract class SymbolicElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends Elem<SymbolicElem<R,S>, SymbolicElemFactory<R,S>> {
 
-	abstract public R eval( ) throws NotInvertibleException;
+	abstract public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException;
+	
+	abstract public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException, MultiplicativeDistributionRequiredException;
 	
 	abstract public String writeString( );
 	

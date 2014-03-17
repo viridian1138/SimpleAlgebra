@@ -24,48 +24,36 @@
 
 
 
-package simplealgebra.symbolic;
+package simplealgebra.ddx;
 
 import java.util.ArrayList;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
+import simplealgebra.symbolic.MultiplicativeDistributionRequiredException;
+import simplealgebra.symbolic.SymbolicElem;
 
-public class SymbolicNegate<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
+public abstract class DerivativeElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S>
 {
-
-	public SymbolicNegate( SymbolicElem<R,S> _elem , S _fac )
-	{
-		super( _fac );
-		elem = _elem;
+	
+	public DerivativeElem(S _fac) {
+		super(_fac);
 	}
+
+	public abstract R evalDerivative( SymbolicElem<R,S> in ) throws NotInvertibleException, MultiplicativeDistributionRequiredException;
 	
 	@Override
 	public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
-		return( elem.eval().negate() );
+		throw( new MultiplicativeDistributionRequiredException() );
 	}
 	
 	@Override
 	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException, MultiplicativeDistributionRequiredException
 	{
-		return( elem.evalPartialDerivative( withRespectTo ).negate() );
+		throw( new MultiplicativeDistributionRequiredException() );
 	}
-
-	@Override
-	public String writeString( ) {
-		return( "negate( " + ( elem.writeString() ) + " )" );
-	}
-	
-	/**
-	 * @return the elem
-	 */
-	public SymbolicElem<R, S> getElem() {
-		return elem;
-	}
-
-
-	private SymbolicElem<R,S> elem;
 
 }
+
 
