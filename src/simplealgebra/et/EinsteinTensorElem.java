@@ -28,6 +28,7 @@ package simplealgebra.et;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import simplealgebra.Elem;
@@ -35,6 +36,9 @@ import simplealgebra.ElemFactory;
 import simplealgebra.MutableElem;
 import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
+import simplealgebra.SquareMatrixElem;
+import simplealgebra.ga.GeometricAlgebraMultivectorElem;
+import simplealgebra.qtrnn.QuaternionElem;
 
 /**
  * Element describing a tensor as defined in General Relativity.
@@ -373,7 +377,87 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 		}
 		return( ret );
 	}
+	
+	
+	public BigInteger getTensorRank()
+	{
+		return( BigInteger.valueOf( contravariantIndices.size() + covariantIndices.size() ) );
+	}
+	
+	
+	public void rankOneTensorToGeometricAlgebra( GeometricAlgebraMultivectorElem<?,R,?> out )
+	{
+		if( !( getTensorRank().equals( BigInteger.ONE ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank One Tensor." ) );
+		}
+		
+		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			ArrayList<BigInteger> key = it.next();
+			HashSet<BigInteger> okey = new HashSet<BigInteger>();
+			okey.add( key.get( 0 ) );
+			R val = map.get( key );
+			out.setVal(okey, val);
+		}
+	}
+	
+	
+	public void rankOneTensorToQuaternion( QuaternionElem<?,R,?> out )
+	{
+		if( !( getTensorRank().equals( BigInteger.ONE ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank One Tensor." ) );
+		}
+		
+		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			ArrayList<BigInteger> key = it.next();
+			HashSet<BigInteger> okey = new HashSet<BigInteger>();
+			okey.add( key.get( 0 ) );
+			R val = map.get( key );
+			out.setVal(okey, val);
+		}
+	}
+	
+	public void rankOneTensorToRowVector( BigInteger row , SquareMatrixElem<?,R,?> out )
+	{
+		if( !( getTensorRank().equals( BigInteger.ONE ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank One Tensor." ) );
+		}
+		
+		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			ArrayList<BigInteger> key = it.next();
+			BigInteger column = key.get( 0 );
+			R val = map.get( key );
+			out.setVal(row, column, val);
+		}
+	}
+	
+	
+	public void rankOneTensorToColumnVector( BigInteger column , SquareMatrixElem<?,R,?> out )
+	{
+		if( !( getTensorRank().equals( BigInteger.ONE ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank One Tensor." ) );
+		}
+		
+		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			ArrayList<BigInteger> key = it.next();
+			BigInteger row = key.get( 0 );
+			R val = map.get( key );
+			out.setVal(row, column, val);
+		}
+	}
 
+	
 	@Override
 	public EinsteinTensorElemFactory<Z, R, S> getFac() {
 		return( new EinsteinTensorElemFactory<Z,R,S>( fac , covariantIndices , contravariantIndices ) );

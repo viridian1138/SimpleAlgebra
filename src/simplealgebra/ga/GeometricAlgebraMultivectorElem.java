@@ -26,6 +26,7 @@
 package simplealgebra.ga;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.NumDimensions;
 import simplealgebra.SquareMatrixElem;
+import simplealgebra.et.EinsteinTensorElem;
 import simplealgebra.qtrnn.QuaternionElem;
 
 public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> 
@@ -328,6 +330,26 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			HashSet<BigInteger> key = it.next();
 			BigInteger row = key.iterator().next();
 			out.setVal(row, column, grd.map.get(key) );
+		}
+	}
+	
+	
+	public void vectorPartToRankOneTensor( EinsteinTensorElem<?,R,?> out )
+	{
+		if( !( out.getTensorRank().equals( BigInteger.ONE ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank One Tensor." ) );
+		}
+		
+		GeometricAlgebraMultivectorElem<U, R, S> grd = getGradedPart( BigInteger.ONE );
+		Iterator<HashSet<BigInteger>> it = grd.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			BigInteger indx = key.iterator().next();
+			ArrayList<BigInteger> okey = new ArrayList<BigInteger>();
+			okey.add( indx );
+			out.setVal(okey, grd.map.get(key));
 		}
 	}
 
