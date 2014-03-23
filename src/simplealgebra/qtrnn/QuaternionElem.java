@@ -37,6 +37,8 @@ import simplealgebra.MutableElem;
 import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.NumDimensions;
+import simplealgebra.SquareMatrixElem;
+import simplealgebra.ga.GeometricAlgebraMultivectorElem;
 
 public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	extends MutableElem<R, QuaternionElem<U,R,S>, QuaternionElemFactory<U,R,S>>  {
@@ -259,7 +261,61 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 		}
 		return( ret );
 	}
+	
+	public void toGeometricAlgebra( GeometricAlgebraMultivectorElem<U, R, ?> out )
+	{
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			R val = map.get(key);
+			out.setVal(key, val);
+		}
+	}
+	
+	
+	public QuaternionElem<U, R, S> getGradedPart( BigInteger grade )
+	{
+		QuaternionElem<U, R, S> ret = new QuaternionElem<U, R, S>( fac , dim );
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			if( grade.equals( BigInteger.valueOf( key.size() ) ) )
+			{
+				ret.setVal(key, map.get(key) );
+			}
+		}
+		return( ret );
+	}
+	
+	
+	public void vectorPartToRowVector( BigInteger row , SquareMatrixElem<U, R, ?> out )
+	{
+		QuaternionElem<U, R, S> grd = getGradedPart( BigInteger.ONE );
+		Iterator<HashSet<BigInteger>> it = grd.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			BigInteger column = key.iterator().next();
+			out.setVal(row, column, grd.map.get(key) );
+		}
+	}
+	
+	
+	public void vectorPartToColumnVector( BigInteger column , SquareMatrixElem<U, R, ?> out )
+	{
+		QuaternionElem<U, R, S> grd = getGradedPart( BigInteger.ONE );
+		Iterator<HashSet<BigInteger>> it = grd.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			BigInteger row = key.iterator().next();
+			out.setVal(row, column, grd.map.get(key) );
+		}
+	}
 
+	
 	@Override
 	public QuaternionElemFactory<U, R, S> getFac() {
 		return( new QuaternionElemFactory<U,R,S>( fac , dim ) );

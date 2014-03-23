@@ -37,6 +37,8 @@ import simplealgebra.MutableElem;
 import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.NumDimensions;
+import simplealgebra.SquareMatrixElem;
+import simplealgebra.qtrnn.QuaternionElem;
 
 public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	extends MutableElem<R, GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElemFactory<U,R,S>>  {
@@ -248,7 +250,88 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 		}
 		return( ret );
 	}
+	
+	
+	public void toQuaternion( QuaternionElem<U, R, ?> out )
+	{
+		R v0 = null;
+		R vl = null;
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			R val = map.get(key);
+			if( !( dim.equals( BigInteger.valueOf( key.size() ) ) ) )
+			{
+				out.setVal(key, val);
+			}
+			else
+			{
+				if( key.size() == 0 )
+				{
+					v0 = val;
+				}
+				vl = val;
+			}
+		}
+		if( vl != null )
+		{
+			vl = vl.negate();
+			HashSet<BigInteger> key = new HashSet<BigInteger>();
+			if( v0 == null )
+			{
+				out.setVal(key, vl);
+			}
+			else
+			{
+				out.setVal(key, v0.add(vl));
+			}
+		}
+	}
+	
+	
+	public GeometricAlgebraMultivectorElem<U, R, S> getGradedPart( BigInteger grade )
+	{
+		GeometricAlgebraMultivectorElem<U, R, S> ret = new GeometricAlgebraMultivectorElem<U, R, S>( fac , dim );
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			if( grade.equals( BigInteger.valueOf( key.size() ) ) )
+			{
+				ret.setVal(key, map.get(key) );
+			}
+		}
+		return( ret );
+	}
+	
+	
+	public void vectorPartToRowVector( BigInteger row , SquareMatrixElem<U, R, ?> out )
+	{
+		GeometricAlgebraMultivectorElem<U, R, S> grd = getGradedPart( BigInteger.ONE );
+		Iterator<HashSet<BigInteger>> it = grd.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			BigInteger column = key.iterator().next();
+			out.setVal(row, column, grd.map.get(key) );
+		}
+	}
+	
+	
+	public void vectorPartToColumnVector( BigInteger column , SquareMatrixElem<U, R, ?> out )
+	{
+		GeometricAlgebraMultivectorElem<U, R, S> grd = getGradedPart( BigInteger.ONE );
+		Iterator<HashSet<BigInteger>> it = grd.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			BigInteger row = key.iterator().next();
+			out.setVal(row, column, grd.map.get(key) );
+		}
+	}
 
+	
 	@Override
 	public GeometricAlgebraMultivectorElemFactory<U, R, S> getFac() {
 		return( new GeometricAlgebraMultivectorElemFactory<U,R,S>( fac , dim ) );
