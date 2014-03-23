@@ -47,7 +47,7 @@ import simplealgebra.symbolic.SymbolicElemFactory;
  * @param <S>
  */
 public class CovariantDerivative<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> 
-		extends DerivativeElem<EinsteinTensorElem<U,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>,EinsteinTensorElemFactory<U,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>>          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		extends DerivativeElem<EinsteinTensorElem<U,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>,EinsteinTensorElemFactory<U,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>>
 {
 
 	public CovariantDerivative( EinsteinTensorElemFactory<U, SymbolicElem<R, S>, 

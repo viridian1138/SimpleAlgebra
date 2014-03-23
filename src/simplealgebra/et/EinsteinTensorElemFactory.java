@@ -30,8 +30,10 @@ import java.util.ArrayList;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
-import simplealgebra.NumDimensions;
 
+/**
+ * Element describing a tensor as defined in General Relativity.
+ */
 public class EinsteinTensorElemFactory<Z extends Object, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends ElemFactory<EinsteinTensorElem<Z,R,S>, EinsteinTensorElemFactory<Z,R,S>> {
 
 	

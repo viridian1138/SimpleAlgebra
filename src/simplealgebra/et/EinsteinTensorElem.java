@@ -36,6 +36,9 @@ import simplealgebra.MutableElem;
 import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 
+/**
+ * Element describing a tensor as defined in General Relativity.
+ */
 public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	extends MutableElem<R, EinsteinTensorElem<Z,R,S>, EinsteinTensorElemFactory<Z,R,S>>  {
 
@@ -78,18 +81,114 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 		
 		return( ret );
 	}
+	
+	
+	
+	/**
+	 * This implementation assumes that repeated tensor indices happen exactly twice, and on opposite sides of the multiplication.
+	 */
+	protected void processIndexMatching( ArrayList<Z> b_contravariantIndices , ArrayList<Z> b_covariantIndices ,
+			ArrayList<Z> new_contravariantIndices , ArrayList<Z> new_covariantIndices , 
+			ArrayList<Integer> matchIndicesA , ArrayList<Integer> matchIndicesB , ArrayList<Integer> nonMatchIndices )
+	{
+		int ocnt = 0;
+		
+		
+		ArrayList<Z> combinedB = buildCombinedCovariantContravariantIn( b_contravariantIndices , b_covariantIndices );
+		
+		
+		{
+			Iterator<Z> it = contravariantIndices.iterator();
+			while( it.hasNext() )
+			{
+				Z tstA = it.next();
+				final int indB = combinedB.indexOf( tstA );
+				if( indB < 0 )
+				{
+					new_contravariantIndices.add( tstA );
+					nonMatchIndices.add( ocnt );
+				}
+				else
+				{
+					matchIndicesA.add( ocnt );
+					matchIndicesB.add( indB );
+				}
+				ocnt++;
+			}
+		}
+		
+		
+		{
+			Iterator<Z> it = covariantIndices.iterator();
+			while( it.hasNext() )
+			{
+				Z tstA = it.next();
+				final int indB = combinedB.indexOf( tstA );
+				if( indB < 0 )
+				{
+					new_covariantIndices.add( tstA );
+					nonMatchIndices.add( ocnt );
+				}
+				else
+				{
+					matchIndicesA.add( ocnt );
+					matchIndicesB.add( indB );
+				}
+				ocnt++;
+			}
+		}
+		
+		
+		{
+			Iterator<Z> it = b_contravariantIndices.iterator();
+			while( it.hasNext() )
+			{
+				Z tstB = it.next();
+				if( !( contravariantIndices.contains( tstB ) ) && !( covariantIndices.contains( tstB ) ) )
+				{
+					new_contravariantIndices.add( tstB );
+					nonMatchIndices.add( ocnt );
+				}
+				ocnt++;
+			}
+		}
+		
+		{
+			Iterator<Z> it = b_covariantIndices.iterator();
+			while( it.hasNext() )
+			{
+				Z tstB = it.next();
+				if( !( contravariantIndices.contains( tstB ) ) && !( covariantIndices.contains( tstB ) ) )
+				{
+					new_covariantIndices.add( tstB );
+					nonMatchIndices.add( ocnt );
+				}
+				ocnt++;
+			}
+		}
+		
+		
+	}
+	
 
+	
 	
 	@Override
 	public EinsteinTensorElem<Z, R, S> mult(EinsteinTensorElem<Z, R, S> b) {
 		
-		ArrayList<Integer> matchIndicesA = null; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		ArrayList<Integer> matchIndicesB = null; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		ArrayList<Integer> nonMatchIndices = null; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		ArrayList<Integer> matchIndicesA = new ArrayList<Integer>();
+		ArrayList<Integer> matchIndicesB = new ArrayList<Integer>();
+		ArrayList<Integer> nonMatchIndices = new ArrayList<Integer>();
+		
+		ArrayList<Z> new_contravariantIndices = new ArrayList<Z>();
+		ArrayList<Z> new_covariantIndices = new ArrayList<Z>();
+		
+		processIndexMatching( b.contravariantIndices , b.covariantIndices ,
+				new_contravariantIndices , new_covariantIndices , matchIndicesA , matchIndicesB , nonMatchIndices );
 		
 		HashMap<ArrayList<BigInteger>,ArrayList<ArrayList<BigInteger>>> matchMap = buildSummationIndexMap( b , matchIndicesB );
 		
-		EinsteinTensorElem<Z,R,S> ret = null;
+		EinsteinTensorElem<Z,R,S> ret = new EinsteinTensorElem<Z,R,S>( fac , new_contravariantIndices , new_covariantIndices );
 		
 		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
 		
