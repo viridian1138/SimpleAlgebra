@@ -27,7 +27,11 @@ package simplealgebra;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+
+import simplealgebra.ga.GeometricAlgebraMultivectorElem;
+import simplealgebra.qtrnn.QuaternionElem;
 
 public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends 
 	MutableElem<R,SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> {
@@ -455,6 +459,67 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 		}
 		
 		subMap.put(row, val);
+	}
+	
+	
+	
+	public void columnVectorToGeometricAlgebra( BigInteger column , GeometricAlgebraMultivectorElem<U,R,?> out )
+	{
+		HashMap<BigInteger,R> atCol = columnMap.get( column );
+		Iterator<BigInteger> it = atCol.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final BigInteger indx = it.next();
+			final R val = atCol.get( indx );
+			final HashSet<BigInteger> el = new HashSet<BigInteger>();
+			el.add( indx );
+			out.setVal(el, val);
+		}
+	}
+	
+	
+	public void rowVectorToGeometricAlgebra( BigInteger row , GeometricAlgebraMultivectorElem<U,R,?> out )
+	{
+		HashMap<BigInteger,R> atRow = rowMap.get( row );
+		Iterator<BigInteger> it = atRow.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final BigInteger indx = it.next();
+			final R val = atRow.get( indx );
+			final HashSet<BigInteger> el = new HashSet<BigInteger>();
+			el.add( indx );
+			out.setVal(el, val);
+		}
+	}
+	
+	
+	public void columnVectorToQuaternion( BigInteger column , QuaternionElem<U,R,?> out )
+	{
+		HashMap<BigInteger,R> atCol = columnMap.get( column );
+		Iterator<BigInteger> it = atCol.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final BigInteger indx = it.next();
+			final R val = atCol.get( indx );
+			final HashSet<BigInteger> el = new HashSet<BigInteger>();
+			el.add( indx );
+			out.setVal(el, val);
+		}
+	}
+	
+	
+	public void rowVectorToQuaternion( BigInteger row , QuaternionElem<U,R,?> out )
+	{
+		HashMap<BigInteger,R> atRow = rowMap.get( row );
+		Iterator<BigInteger> it = atRow.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final BigInteger indx = it.next();
+			final R val = atRow.get( indx );
+			final HashSet<BigInteger> el = new HashSet<BigInteger>();
+			el.add( indx );
+			out.setVal(el, val);
+		}
 	}
 	
 	
