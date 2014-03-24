@@ -26,10 +26,12 @@
 package simplealgebra;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import simplealgebra.et.EinsteinTensorElem;
 import simplealgebra.ga.GeometricAlgebraMultivectorElem;
 import simplealgebra.qtrnn.QuaternionElem;
 
@@ -519,6 +521,72 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			final HashSet<BigInteger> el = new HashSet<BigInteger>();
 			el.add( indx );
 			out.setVal(el, val);
+		}
+	}
+	
+	
+	public void columnVectorToRankOneTensor( BigInteger column , EinsteinTensorElem<?,R,?> out )
+	{
+		if( !( out.getTensorRank().equals( BigInteger.ONE ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank One Tensor." ) );
+		}
+		
+		HashMap<BigInteger,R> atCol = columnMap.get( column );
+		Iterator<BigInteger> it = atCol.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final BigInteger indx = it.next();
+			final R val = atCol.get( indx );
+			final ArrayList<BigInteger> el = new ArrayList<BigInteger>();
+			el.add( indx );
+			out.setVal(el, val);
+		}
+	}
+	
+	
+	public void rowVectorToRankOneTensor( BigInteger row , EinsteinTensorElem<?,R,?> out )
+	{
+		if( !( out.getTensorRank().equals( BigInteger.ONE ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank One Tensor." ) );
+		}
+		
+		HashMap<BigInteger,R> atRow = rowMap.get( row );
+		Iterator<BigInteger> it = atRow.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final BigInteger indx = it.next();
+			final R val = atRow.get( indx );
+			final ArrayList<BigInteger> el = new ArrayList<BigInteger>();
+			el.add( indx );
+			out.setVal(el, val);
+		}
+	}
+	
+	
+	public void toRankTwoTensor( EinsteinTensorElem<?,R,?> out )
+	{
+		if( !( out.getTensorRank().equals( BigInteger.valueOf( 2 ) ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank Two Tensor." ) );
+		}
+		
+		Iterator<BigInteger> itr = rowMap.keySet().iterator();
+		while( itr.hasNext() )
+		{
+			BigInteger row = itr.next();
+			HashMap<BigInteger,R> atRow = rowMap.get( row );
+			Iterator<BigInteger> it = atRow.keySet().iterator();
+			while( it.hasNext() )
+			{
+				final BigInteger column = it.next();
+				final R val = atRow.get( column );
+				final ArrayList<BigInteger> el = new ArrayList<BigInteger>();
+				el.add( row );
+				el.add( column );
+				out.setVal(el, val);
+			}
 		}
 	}
 	

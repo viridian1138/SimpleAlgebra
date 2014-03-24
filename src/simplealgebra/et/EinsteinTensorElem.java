@@ -456,6 +456,25 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 			out.setVal(row, column, val);
 		}
 	}
+	
+	
+	public void rankTwoTensorToSquareMatrix( SquareMatrixElem<?,R,?> out )
+	{
+		if( !( getTensorRank().equals( BigInteger.valueOf( 2 ) ) ) )
+		{
+			throw( new RuntimeException( "Not a Rank Two Tensor." ) );
+		}
+		
+		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			ArrayList<BigInteger> key = it.next();
+			BigInteger row = key.get(0);
+			BigInteger column = key.get(1);
+			R val = map.get( key );
+			out.setVal(row, column, val);
+		}
+	}
 
 	
 	@Override
