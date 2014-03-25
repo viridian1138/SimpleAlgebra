@@ -26,11 +26,13 @@
 package simplealgebra.ga;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NumDimensions;
+import simplealgebra.symbolic.SymbolicElem;
 
 public class GeometricAlgebraMultivectorElemFactory<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends ElemFactory<GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> {
 
@@ -58,6 +60,40 @@ public class GeometricAlgebraMultivectorElemFactory<U extends NumDimensions, R e
 	public S getFac()
 	{
 		return( fac );
+	}
+	
+	
+	@Override
+	public SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> handleSymbolicOptionalOp( Object id , 
+			ArrayList<SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>>> args )
+	{
+		if( id instanceof GeometricAlgebraMultivectorElem.GeometricAlgebraMultivectorCmd )
+		{
+			switch( (GeometricAlgebraMultivectorElem.GeometricAlgebraMultivectorCmd) id )
+			{
+				case DOT:
+				{
+					SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> argA
+						= args.get( 0 );
+					SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> argB
+						= args.get( 1 );
+					return( new SymbolicDot<U,R,S>( argA , argB , argA.getFac().getFac() ) );
+				}
+				// break;
+				
+				case WEDGE:
+				{
+					SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> argA
+						= args.get( 0 );
+					SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> argB
+						= args.get( 1 );
+					return( new SymbolicWedge<U,R,S>( argA , argB , argA.getFac().getFac() ) );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleSymbolicOptionalOp(id, args) );
 	}
 	
 	

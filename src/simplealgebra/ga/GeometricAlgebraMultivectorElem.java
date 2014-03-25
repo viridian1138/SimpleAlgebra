@@ -45,6 +45,10 @@ import simplealgebra.qtrnn.QuaternionElem;
 public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	extends MutableElem<R, GeometricAlgebraMultivectorElem<U,R,S>, GeometricAlgebraMultivectorElemFactory<U,R,S>>  {
 
+	public static enum GeometricAlgebraMultivectorCmd {
+		DOT,
+		WEDGE
+	};
 	
 	public GeometricAlgebraMultivectorElem( S _fac , U _dim )
 	{
@@ -351,6 +355,113 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			okey.add( indx );
 			out.setVal(okey, grd.map.get(key));
 		}
+	}
+	
+	
+	private GeometricAlgebraMultivectorElem<U, R, S> dot(GeometricAlgebraMultivectorElem<U, R, S> b) {
+		GeometricAlgebraMultivectorElem<U,R,S> ret = new GeometricAlgebraMultivectorElem<U,R,S>(fac,dim);
+		
+		Iterator<HashSet<BigInteger>> ita = map.keySet().iterator();
+		while( ita.hasNext() )
+		{
+			HashSet<BigInteger> ka = ita.next();
+			R va = map.get( ka );
+			Iterator<HashSet<BigInteger>> itb = b.map.keySet().iterator();
+			while( itb.hasNext() )
+			{
+				HashSet<BigInteger> kb = itb.next();
+				R vb = map.get( kb );
+				R vmul = va.mult( vb );
+				HashSet<BigInteger> el = new HashSet<BigInteger>();
+				final boolean negate = calcOrd( ka , kb , el );
+				final int maxGrd = Math.max( ka.size() , kb.size() );
+				if( el.size() <= maxGrd )
+				{
+					if( negate )
+					{
+						vmul = vmul.negate();
+					}
+					R vv = ret.get( el );
+					if( vv != null )
+					{
+						ret.setVal(el, vv.add(vmul) );
+					}
+					else
+					{
+						ret.setVal(el, vmul );
+					}
+				}
+			}
+		}
+		
+		return( ret );
+	}
+	
+	
+	private GeometricAlgebraMultivectorElem<U, R, S> wedge(GeometricAlgebraMultivectorElem<U, R, S> b) {
+		GeometricAlgebraMultivectorElem<U,R,S> ret = new GeometricAlgebraMultivectorElem<U,R,S>(fac,dim);
+		
+		Iterator<HashSet<BigInteger>> ita = map.keySet().iterator();
+		while( ita.hasNext() )
+		{
+			HashSet<BigInteger> ka = ita.next();
+			R va = map.get( ka );
+			Iterator<HashSet<BigInteger>> itb = b.map.keySet().iterator();
+			while( itb.hasNext() )
+			{
+				HashSet<BigInteger> kb = itb.next();
+				R vb = map.get( kb );
+				R vmul = va.mult( vb );
+				HashSet<BigInteger> el = new HashSet<BigInteger>();
+				final boolean negate = calcOrd( ka , kb , el );
+				final int maxGrd = Math.max( ka.size() , kb.size() );
+				if( el.size() > maxGrd )
+				{
+					if( negate )
+					{
+						vmul = vmul.negate();
+					}
+					R vv = ret.get( el );
+					if( vv != null )
+					{
+						ret.setVal(el, vv.add(vmul) );
+					}
+					else
+					{
+						ret.setVal(el, vmul );
+					}
+				}
+			}
+		}
+		
+		return( ret );
+	}
+	
+	
+	@Override
+	public GeometricAlgebraMultivectorElem<U, R, S> handleOptionalOp( Object id , ArrayList<GeometricAlgebraMultivectorElem<U, R, S>> args )
+	{
+		if( id instanceof GeometricAlgebraMultivectorElem.GeometricAlgebraMultivectorCmd )
+		{
+			switch( (GeometricAlgebraMultivectorElem.GeometricAlgebraMultivectorCmd) id )
+			{
+				case DOT:
+				{
+					GeometricAlgebraMultivectorElem<U, R, S> b = args.get( 0 );
+					return( dot( b ) );
+				}
+				// break;
+				
+				case WEDGE:
+				{
+					GeometricAlgebraMultivectorElem<U, R, S> b = args.get( 0 );
+					return( wedge( b ) );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
 	}
 
 	

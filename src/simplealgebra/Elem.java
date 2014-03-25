@@ -24,6 +24,8 @@
 
 package simplealgebra;
 
+import java.util.ArrayList;
+
 
 public abstract class Elem<T extends Elem<T,?>, R extends ElemFactory<T,R>> {
 
@@ -38,6 +40,11 @@ public abstract class Elem<T extends Elem<T,?>, R extends ElemFactory<T,R>> {
 	public abstract T divideBy( int val );
 	
 	public abstract R getFac();
+	
+	public T handleOptionalOp( Object id , ArrayList<T> args )
+	{
+		throw( new RuntimeException( "Operation Not Supported" ) );
+	}
 	
 }
 

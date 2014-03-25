@@ -77,6 +77,12 @@ public abstract class SymbolicElem<R extends Elem<R,?>, S extends ElemFactory<R,
 		return( new SymbolicElemFactory<R,S>( fac ) );
 	}
 	
+	@Override
+	public SymbolicElem<R, S> handleOptionalOp( Object id , ArrayList<SymbolicElem<R, S>> args )
+	{
+		return( getFac().getFac().handleSymbolicOptionalOp(id, args) );
+	}
+	
 	
 	protected S fac;
 	

@@ -26,6 +26,9 @@
 package simplealgebra;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+
+import simplealgebra.symbolic.SymbolicElem;
 
 public class SquareMatrixElemFactory<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends ElemFactory<SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> {
 
@@ -52,6 +55,28 @@ public class SquareMatrixElemFactory<U extends NumDimensions, R extends Elem<R,?
 	@Override
 	public SquareMatrixElem<U, R, S> zero() {
 		return( new SquareMatrixElem<U, R, S>( fac , dim ) );
+	}
+	
+	
+	@Override
+	public SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> handleSymbolicOptionalOp( Object id , 
+			ArrayList<SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>>> args )
+	{
+		if( id instanceof SquareMatrixElem.SquareMatrixCmd )
+		{
+			switch( (SquareMatrixElem.SquareMatrixCmd) id )
+			{
+				case TRANSPOSE:
+				{
+					SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> arg
+						= args.get( 0 );
+					return( new SymbolicTranspose<U,R,S>( arg , arg.getFac().getFac() ) );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleSymbolicOptionalOp(id, args) );
 	}
 	
 	

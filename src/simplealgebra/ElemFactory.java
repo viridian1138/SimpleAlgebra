@@ -24,6 +24,10 @@
 
 package simplealgebra;
 
+import java.util.ArrayList;
+
+import simplealgebra.symbolic.SymbolicElem;
+
 public abstract class ElemFactory<T extends Elem<T,?>, R extends ElemFactory<T,R>> {
 
 	public abstract T identity();
@@ -33,6 +37,11 @@ public abstract class ElemFactory<T extends Elem<T,?>, R extends ElemFactory<T,R
 	public T negativeIdentity()
 	{
 		return( identity().negate() );
+	}
+	
+	public SymbolicElem<T, R> handleSymbolicOptionalOp( Object id , ArrayList<SymbolicElem<T, R>> args )
+	{
+		throw( new RuntimeException( "Operation Not Supported" ) );
 	}
 	
 }

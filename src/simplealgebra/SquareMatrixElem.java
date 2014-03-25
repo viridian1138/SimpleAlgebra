@@ -37,6 +37,10 @@ import simplealgebra.qtrnn.QuaternionElem;
 
 public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends 
 	MutableElem<R,SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> {
+	
+	public static enum SquareMatrixCmd {
+		TRANSPOSE
+	};
 
 	
 	public SquareMatrixElem( S _fac , U _dim )
@@ -588,6 +592,39 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				out.setVal(el, val);
 			}
 		}
+	}
+	
+	
+	@Override
+	public SquareMatrixElem<U, R, S> handleOptionalOp( Object id , ArrayList<SquareMatrixElem<U, R, S>> args )
+	{
+		if( id instanceof SquareMatrixElem.SquareMatrixCmd )
+		{
+			switch( (SquareMatrixElem.SquareMatrixCmd) id )
+			{
+				case TRANSPOSE:
+				{
+					SquareMatrixElem<U,R,S> ret = new SquareMatrixElem<U,R,S>(fac,dim);
+					Iterator<BigInteger> rowi = rowMap.keySet().iterator();
+					while( rowi.hasNext() )
+					{
+						BigInteger row = rowi.next();
+						HashMap<BigInteger,R> subMap = rowMap.get( row );
+						Iterator<BigInteger> coli = subMap.keySet().iterator();
+						while( coli.hasNext() )
+						{
+							BigInteger col = coli.next();
+							R val = subMap.get( col );
+							ret.setVal(col, row, val );
+						}
+					}
+					return( ret );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
 	}
 	
 	
