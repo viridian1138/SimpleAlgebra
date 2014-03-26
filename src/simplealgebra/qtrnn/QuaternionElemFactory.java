@@ -55,6 +55,13 @@ public class QuaternionElemFactory<U extends NumDimensions, R extends Elem<R,?>,
 	}
 	
 	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( false );
+	}
+	
+	
 	public S getFac()
 	{
 		return( fac );

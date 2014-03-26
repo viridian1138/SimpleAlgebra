@@ -55,6 +55,13 @@ public class BigFixedPointElemFactory<T extends Precision> extends ElemFactory<B
 	public BigFixedPointElem<T> zero() {
 		return( new BigFixedPointElem<T>( BigInteger.ZERO , prec ) );
 	}
+	
+	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( true );
+	}
 
 	
 }

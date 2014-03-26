@@ -46,6 +46,12 @@ public class SymbolicElemFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>
 		return( new SymbolicZero<R,S>( fac ) );
 	}
 	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( fac.isMultCommutative() );
+	}
+	
 	public S getFac()
 	{
 		return( fac );

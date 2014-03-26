@@ -39,10 +39,12 @@ public abstract class ElemFactory<T extends Elem<T,?>, R extends ElemFactory<T,R
 		return( identity().negate() );
 	}
 	
-	public SymbolicElem<T, R> handleSymbolicOptionalOp( Object id , ArrayList<SymbolicElem<T, R>> args )
+	public SymbolicElem<T, R> handleSymbolicOptionalOp( Object id , ArrayList<SymbolicElem<T, R>> args ) throws NotInvertibleException
 	{
 		throw( new RuntimeException( "Operation Not Supported" ) );
 	}
+	
+	public abstract boolean isMultCommutative();
 	
 }
 

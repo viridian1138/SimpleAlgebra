@@ -41,7 +41,7 @@ public abstract class Elem<T extends Elem<T,?>, R extends ElemFactory<T,R>> {
 	
 	public abstract R getFac();
 	
-	public T handleOptionalOp( Object id , ArrayList<T> args )
+	public T handleOptionalOp( Object id , ArrayList<T> args ) throws NotInvertibleException
 	{
 		throw( new RuntimeException( "Operation Not Supported" ) );
 	}

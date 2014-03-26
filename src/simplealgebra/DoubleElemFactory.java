@@ -37,6 +37,12 @@ public class DoubleElemFactory extends ElemFactory<DoubleElem, DoubleElemFactory
 		return( new DoubleElem( 0.0 ) );
 	}
 	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( true );
+	}
+	
 	public DoubleElemFactory()
 	{
 	}

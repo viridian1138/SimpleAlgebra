@@ -59,6 +59,13 @@ public class EinsteinTensorElemFactory<Z extends Object, R extends Elem<R,?>, S 
 	}
 	
 	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( false );
+	}
+	
+	
 	private S fac;
 	private ArrayList<Z> contravariantIndices;
 	private ArrayList<Z> covariantIndices;

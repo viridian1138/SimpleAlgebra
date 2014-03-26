@@ -439,7 +439,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	
 	
 	@Override
-	public GeometricAlgebraMultivectorElem<U, R, S> handleOptionalOp( Object id , ArrayList<GeometricAlgebraMultivectorElem<U, R, S>> args )
+	public GeometricAlgebraMultivectorElem<U, R, S> handleOptionalOp( Object id , ArrayList<GeometricAlgebraMultivectorElem<U, R, S>> args )  throws NotInvertibleException
 	{
 		if( id instanceof GeometricAlgebraMultivectorElem.GeometricAlgebraMultivectorCmd )
 		{

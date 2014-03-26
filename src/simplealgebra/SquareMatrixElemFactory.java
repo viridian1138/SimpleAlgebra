@@ -60,7 +60,7 @@ public class SquareMatrixElemFactory<U extends NumDimensions, R extends Elem<R,?
 	
 	@Override
 	public SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> handleSymbolicOptionalOp( Object id , 
-			ArrayList<SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>>> args )
+			ArrayList<SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>>> args )  throws NotInvertibleException
 	{
 		if( id instanceof SquareMatrixElem.SquareMatrixCmd )
 		{
@@ -77,6 +77,12 @@ public class SquareMatrixElemFactory<U extends NumDimensions, R extends Elem<R,?
 		}
 		
 		return( super.handleSymbolicOptionalOp(id, args) );
+	}
+	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( false );
 	}
 	
 	

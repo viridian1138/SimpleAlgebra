@@ -22,9 +22,18 @@
 
 package simplealgebra;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
 public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	extends MutableElem<R,ComplexElem<R,S>,ComplexElemFactory<R,S>>
 	{
+	
+	public static enum ComplexCmd {
+		CONJUGATE
+	};
 
 	@Override
 	public ComplexElem<R, S> add(ComplexElem<R, S> b) {
@@ -52,21 +61,73 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 
 	@Override
 	public ComplexElem<R, S> invert() throws NotInvertibleException {
-		final R a = re;
-		final R b = im;
-		final R binv = b.invert();
-		final R cnumer = binv.mult( a ).mult( binv );
-		final R cdenom = ( a.getFac().identity() ).add( cnumer.mult( a ) );
-		final R c = ( cdenom.invert() ).mult( cnumer );
-		final R d = binv.mult( a.mult( c ).add( a.getFac().negativeIdentity() ) );
-		return( new ComplexElem<R,S>( c , d ) );
+		if( re.getFac().isMultCommutative() )
+		{
+			final R denom = ( re.mult(re) ).add( im.mult(im).negate() );
+			final R div = denom.invert();
+			final R c = re.mult( div );
+			final R d = im.mult( div ).negate();
+			return( new ComplexElem<R,S>( c , d ) );
+		}
+		else
+		{
+			final R a = re;
+			final R b = im;
+			final R binv = b.invert();
+			final R cnumer = binv.mult( a ).mult( binv );
+			final R cdenom = ( a.getFac().identity() ).add( cnumer.mult( a ) );
+			final R c = ( cdenom.invert() ).mult( cnumer );
+			final R d = binv.mult( a.mult( c ).add( a.getFac().negativeIdentity() ) );
+			return( new ComplexElem<R,S>( c , d ) );
+		}
+	}
+	
+	private ComplexElem<R, S> conjugate() throws NotInvertibleException { 
+		if( re.getFac().isMultCommutative() )
+		{
+			final R c = re;
+			final R d = im.negate();
+			return( new ComplexElem<R,S>( c , d ) );
+		}
+		else
+		{
+			final R val = ( re.mult(re) ).add( im.mult(im).negate() );
+			final R a = re; 
+			final R b = im;
+			final R binv = b.invert();
+			final R cnumer = binv.mult( a ).mult( binv );
+			final R cdenom = val.add( cnumer.mult( a ) );
+			final R c = ( cdenom.invert() ).mult( cnumer );
+			final R d = binv.mult( a.mult( c ).add( val.negate() ) );
+			return( new ComplexElem<R,S>( c , d ) );
+		}
 	}
 
 	@Override
 	public ComplexElem<R, S> divideBy(int val) {
 		return( new ComplexElem<R,S>( re.divideBy(val) , im.divideBy(val) ) );
 	}
+	
+	
+	@Override
+	public ComplexElem<R, S> handleOptionalOp( Object id , ArrayList<ComplexElem<R, S>> args ) throws NotInvertibleException
+	{
+		if( id instanceof ComplexElem.ComplexCmd )
+		{
+			switch( (ComplexElem.ComplexCmd) id )
+			{
+				case CONJUGATE:
+				{
+					return( conjugate() );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
+	}
 
+	
 	@Override
 	public ComplexElemFactory<R, S> getFac() {
 		return( new ComplexElemFactory<R,S>( (S)( re.getFac() ) ) );

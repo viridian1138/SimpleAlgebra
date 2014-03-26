@@ -24,6 +24,10 @@
 
 package simplealgebra;
 
+import java.util.ArrayList;
+
+import simplealgebra.symbolic.SymbolicElem;
+
 public class ComplexElemFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends ElemFactory<ComplexElem<R,S>, ComplexElemFactory<R,S>> {
 
 	
@@ -41,6 +45,35 @@ public class ComplexElemFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	@Override
 	public ComplexElem<R, S> zero() {
 		return( new ComplexElem<R,S>( fac.zero() , fac.zero() ) );
+	}
+	
+	
+	@Override
+	public SymbolicElem<ComplexElem<R, S>, ComplexElemFactory<R,S>> handleSymbolicOptionalOp( Object id , 
+			ArrayList<SymbolicElem<ComplexElem<R, S>, ComplexElemFactory<R,S>>> args )  throws NotInvertibleException
+	{
+		if( id instanceof ComplexElem.ComplexCmd )
+		{
+			switch( (ComplexElem.ComplexCmd) id )
+			{
+				case CONJUGATE:
+				{
+					SymbolicElem<ComplexElem<R, S>, ComplexElemFactory<R,S>> arg
+						= args.get( 0 );
+					return( new SymbolicConjugate<R,S>( arg , arg.getFac().getFac() ) );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleSymbolicOptionalOp(id, args) );
+	}
+	
+	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( fac.isMultCommutative() );
 	}
 	
 	private S fac;

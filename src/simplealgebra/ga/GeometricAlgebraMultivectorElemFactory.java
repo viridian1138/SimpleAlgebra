@@ -31,6 +31,7 @@ import java.util.HashSet;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
+import simplealgebra.NotInvertibleException;
 import simplealgebra.NumDimensions;
 import simplealgebra.symbolic.SymbolicElem;
 
@@ -57,6 +58,13 @@ public class GeometricAlgebraMultivectorElemFactory<U extends NumDimensions, R e
 	}
 	
 	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( false );
+	}
+	
+	
 	public S getFac()
 	{
 		return( fac );
@@ -65,7 +73,7 @@ public class GeometricAlgebraMultivectorElemFactory<U extends NumDimensions, R e
 	
 	@Override
 	public SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> handleSymbolicOptionalOp( Object id , 
-			ArrayList<SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>>> args )
+			ArrayList<SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>>> args )  throws NotInvertibleException
 	{
 		if( id instanceof GeometricAlgebraMultivectorElem.GeometricAlgebraMultivectorCmd )
 		{
