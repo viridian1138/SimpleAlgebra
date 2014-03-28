@@ -76,6 +76,13 @@ public class ComplexElemFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 		return( fac.isMultCommutative() );
 	}
 	
+	
+	public S getFac()
+	{
+		return( fac );
+	}
+	
+	
 	private S fac;
 
 }

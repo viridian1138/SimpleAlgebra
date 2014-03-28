@@ -438,6 +438,54 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	}
 	
 	
+	public void rowVectorMult( SquareMatrixElem<U, R, ?> in , 
+			GeometricAlgebraMultivectorElem<U, R, S> rowVectorOut )
+	{
+		final GeometricAlgebraMultivectorElem<U, R, S> rowVectIn = this.getGradedPart( BigInteger.ONE );
+		final Iterator<HashSet<BigInteger>> it = rowVectIn.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final HashSet<BigInteger> keyK = it.next();
+			final R rowVectInVal = rowVectIn.get( keyK );
+			final BigInteger k = keyK.iterator().next();
+			final GeometricAlgebraMultivectorElem<U, R, S> rowVectMat = new GeometricAlgebraMultivectorElem<U, R, S>(fac, dim);
+			in.rowVectorToGeometricAlgebra(k, rowVectMat);
+			final Iterator<HashSet<BigInteger>> ita = rowVectMat.map.keySet().iterator();
+			while( ita.hasNext() )
+			{
+				final HashSet<BigInteger> keyJ = ita.next();
+				final R rowVectMatVal = rowVectMat.get( keyJ );
+				final R val = rowVectInVal.mult( rowVectMatVal );
+				rowVectorOut.setVal(keyJ, val.add( rowVectorOut.get(keyJ) ) );
+			}
+		}
+	}
+	
+	
+	public void colVectorMult( SquareMatrixElem<U, R, ?> in , 
+			GeometricAlgebraMultivectorElem<U, R, S> colVectorOut )
+	{
+		final GeometricAlgebraMultivectorElem<U, R, S> colVectIn = this.getGradedPart( BigInteger.ONE );
+		final Iterator<HashSet<BigInteger>> it = colVectIn.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final HashSet<BigInteger> keyK = it.next();
+			final R colVectInVal = colVectIn.get( keyK );
+			final BigInteger k = keyK.iterator().next();
+			final GeometricAlgebraMultivectorElem<U, R, S> colVectMat = new GeometricAlgebraMultivectorElem<U, R, S>(fac, dim);
+			in.columnVectorToGeometricAlgebra(k, colVectMat);
+			final Iterator<HashSet<BigInteger>> ita = colVectMat.map.keySet().iterator();
+			while( ita.hasNext() )
+			{
+				final HashSet<BigInteger> keyI = ita.next();
+				final R colVectMatVal = colVectMat.get( keyI );
+				final R val = colVectMatVal.mult( colVectInVal );
+				colVectorOut.setVal(keyI, val.add( colVectorOut.get(keyI) ) );
+			}
+		}
+	}
+	
+	
 	@Override
 	public GeometricAlgebraMultivectorElem<U, R, S> handleOptionalOp( Object id , ArrayList<GeometricAlgebraMultivectorElem<U, R, S>> args )  throws NotInvertibleException
 	{

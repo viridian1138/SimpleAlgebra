@@ -336,6 +336,54 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 			out.setVal(okey, grd.map.get(key));
 		}
 	}
+	
+	
+	public void rowVectorMult( SquareMatrixElem<U, R, ?> in , 
+			QuaternionElem<U, R, S> rowVectorOut )
+	{
+		final QuaternionElem<U, R, S> rowVectIn = this.getGradedPart( BigInteger.ONE );
+		final Iterator<HashSet<BigInteger>> it = rowVectIn.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final HashSet<BigInteger> keyK = it.next();
+			final R rowVectInVal = rowVectIn.get( keyK );
+			final BigInteger k = keyK.iterator().next();
+			final QuaternionElem<U, R, S> rowVectMat = new QuaternionElem<U, R, S>(fac, dim);
+			in.rowVectorToQuaternion(k, rowVectMat);
+			final Iterator<HashSet<BigInteger>> ita = rowVectMat.map.keySet().iterator();
+			while( ita.hasNext() )
+			{
+				final HashSet<BigInteger> keyJ = ita.next();
+				final R rowVectMatVal = rowVectMat.get( keyJ );
+				final R val = rowVectInVal.mult( rowVectMatVal );
+				rowVectorOut.setVal(keyJ, val.add( rowVectorOut.get(keyJ) ) );
+			}
+		}
+	}
+	
+	
+	public void colVectorMult( SquareMatrixElem<U, R, ?> in , 
+			QuaternionElem<U, R, S> colVectorOut )
+	{
+		final QuaternionElem<U, R, S> colVectIn = this.getGradedPart( BigInteger.ONE );
+		final Iterator<HashSet<BigInteger>> it = colVectIn.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final HashSet<BigInteger> keyK = it.next();
+			final R colVectInVal = colVectIn.get( keyK );
+			final BigInteger k = keyK.iterator().next();
+			final QuaternionElem<U, R, S> colVectMat = new QuaternionElem<U, R, S>(fac, dim);
+			in.columnVectorToQuaternion(k, colVectMat);
+			final Iterator<HashSet<BigInteger>> ita = colVectMat.map.keySet().iterator();
+			while( ita.hasNext() )
+			{
+				final HashSet<BigInteger> keyI = ita.next();
+				final R colVectMatVal = colVectMat.get( keyI );
+				final R val = colVectMatVal.mult( colVectInVal );
+				colVectorOut.setVal(keyI, val.add( colVectorOut.get(keyI) ) );
+			}
+		}
+	}
 
 	
 	@Override
