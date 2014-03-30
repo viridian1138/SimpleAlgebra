@@ -245,7 +245,14 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 
 	
 	@Override
-	public QuaternionElem<U, R, S> invert() throws NotInvertibleException {
+	public QuaternionElem<U, R, S> invertLeft() throws NotInvertibleException {
+		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	}
+	
+	
+	
+	@Override
+	public QuaternionElem<U, R, S> invertRight() throws NotInvertibleException {
 		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 	

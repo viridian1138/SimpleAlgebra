@@ -65,7 +65,16 @@ public class BigFixedPointElem<T extends Precision> extends Elem<BigFixedPointEl
 	}
 
 	@Override
-	public BigFixedPointElem<T> invert() throws NotInvertibleException {
+	public BigFixedPointElem<T> invertLeft() throws NotInvertibleException {
+		if( val.equals( BigInteger.ZERO ) )
+		{
+			throw( new NotInvertibleException() );
+		}
+		return( new BigFixedPointElem<T>( prec.getValSquared().divide( val ) , prec ) );
+	}
+	
+	@Override
+	public BigFixedPointElem<T> invertRight() throws NotInvertibleException {
 		if( val.equals( BigInteger.ZERO ) )
 		{
 			throw( new NotInvertibleException() );

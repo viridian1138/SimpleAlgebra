@@ -63,8 +63,13 @@ public abstract class SymbolicElem<R extends Elem<R,?>, S extends ElemFactory<R,
 	}
 
 	@Override
-	public SymbolicElem<R, S> invert() throws NotInvertibleException {
-		return( new SymbolicInvert<R,S>( this , fac ) );
+	public SymbolicElem<R, S> invertLeft() throws NotInvertibleException {
+		return( new SymbolicInvertLeft<R,S>( this , fac ) );
+	}
+	
+	@Override
+	public SymbolicElem<R, S> invertRight() throws NotInvertibleException {
+		return( new SymbolicInvertRight<R,S>( this , fac ) );
 	}
 
 	@Override

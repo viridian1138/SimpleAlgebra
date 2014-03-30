@@ -33,10 +33,10 @@ import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
 
-public class SymbolicInvert<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
+public class SymbolicInvertLeft<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
 {
 
-	public SymbolicInvert( SymbolicElem<R,S> _elem , S _fac )
+	public SymbolicInvertLeft( SymbolicElem<R,S> _elem , S _fac )
 	{
 		super( _fac );
 		elem = _elem;
@@ -44,7 +44,7 @@ public class SymbolicInvert<R extends Elem<R,?>, S extends ElemFactory<R,S>> ext
 	
 	@Override
 	public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
-		return( elem.eval().invert() );
+		return( elem.eval().invertLeft() );
 	}
 	
 	@Override

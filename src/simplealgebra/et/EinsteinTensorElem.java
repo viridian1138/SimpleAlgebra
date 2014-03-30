@@ -359,7 +359,14 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 
 	
 	@Override
-	public EinsteinTensorElem<Z, R, S> invert() throws NotInvertibleException {
+	public EinsteinTensorElem<Z, R, S> invertLeft() throws NotInvertibleException {
+		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	}
+	
+	
+	
+	@Override
+	public EinsteinTensorElem<Z, R, S> invertRight() throws NotInvertibleException {
 		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 	

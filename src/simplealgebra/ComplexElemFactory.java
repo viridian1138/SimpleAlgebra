@@ -56,13 +56,22 @@ public class ComplexElemFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 		{
 			switch( (ComplexElem.ComplexCmd) id )
 			{
-				case CONJUGATE:
+				case CONJUGATE_LEFT:
 				{
 					SymbolicElem<ComplexElem<R, S>, ComplexElemFactory<R,S>> arg
 						= args.get( 0 );
-					return( new SymbolicConjugate<R,S>( arg , arg.getFac().getFac() ) );
+					return( new SymbolicConjugateLeft<R,S>( arg , arg.getFac().getFac() ) );
 				}
 				// break;
+				
+				case CONJUGATE_RIGHT:
+				{
+					SymbolicElem<ComplexElem<R, S>, ComplexElemFactory<R,S>> arg
+						= args.get( 0 );
+					return( new SymbolicConjugateRight<R,S>( arg , arg.getFac().getFac() ) );
+				}
+				// break;
+				
 			}
 		}
 		

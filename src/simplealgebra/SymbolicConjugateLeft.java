@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import simplealgebra.symbolic.MultiplicativeDistributionRequiredException;
 import simplealgebra.symbolic.SymbolicElem;
 
-public class SymbolicConjugate<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends 
+public class SymbolicConjugateLeft<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends 
 	SymbolicElem<ComplexElem<R,S>,ComplexElemFactory<R,S>> 
 {
 
-	public SymbolicConjugate( SymbolicElem<ComplexElem<R,S>,ComplexElemFactory<R,S>> _elem , ComplexElemFactory<R, S> _fac) 
+	public SymbolicConjugateLeft( SymbolicElem<ComplexElem<R,S>,ComplexElemFactory<R,S>> _elem , ComplexElemFactory<R, S> _fac) 
 	{
 		super( _fac );
 		elem = _elem;
@@ -46,7 +46,7 @@ public class SymbolicConjugate<R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	public ComplexElem<R, S> eval() throws NotInvertibleException,
 			MultiplicativeDistributionRequiredException {
 		ArrayList<ComplexElem<R,S>> args = new ArrayList<ComplexElem<R,S>>();
-		return( elem.eval().handleOptionalOp( ComplexElem.ComplexCmd.CONJUGATE , args ) );
+		return( elem.eval().handleOptionalOp( ComplexElem.ComplexCmd.CONJUGATE_LEFT , args ) );
 	}
 
 	
@@ -61,7 +61,7 @@ public class SymbolicConjugate<R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	
 	@Override
 	public String writeString( ) {
-		return( "conjugate( " + ( elem.writeString() ) + " )" );
+		return( "conjugateLeft( " + ( elem.writeString() ) + " )" );
 	}
 	
 	

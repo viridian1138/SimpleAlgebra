@@ -238,7 +238,14 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 
 	
 	@Override
-	public GeometricAlgebraMultivectorElem<U, R, S> invert() throws NotInvertibleException {
+	public GeometricAlgebraMultivectorElem<U, R, S> invertLeft() throws NotInvertibleException {
+		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	}
+	
+	
+	
+	@Override
+	public GeometricAlgebraMultivectorElem<U, R, S> invertRight() throws NotInvertibleException {
 		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 	

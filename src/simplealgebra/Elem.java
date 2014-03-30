@@ -35,7 +35,9 @@ public abstract class Elem<T extends Elem<T,?>, R extends ElemFactory<T,R>> {
 	
 	public abstract T negate( );
 	
-	public abstract T invert( ) throws NotInvertibleException;
+	public abstract T invertLeft( ) throws NotInvertibleException;
+	
+	public abstract T invertRight( ) throws NotInvertibleException;
 	
 	public abstract T divideBy( int val );
 	

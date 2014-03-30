@@ -34,7 +34,8 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	{
 	
 	public static enum ComplexCmd {
-		CONJUGATE
+		CONJUGATE_LEFT,
+		CONJUGATE_RIGHT
 	};
 
 	@Override
@@ -62,11 +63,11 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	}
 
 	@Override
-	public ComplexElem<R, S> invert() throws NotInvertibleException {
+	public ComplexElem<R, S> invertLeft() throws NotInvertibleException {
 		if( re.getFac().isMultCommutative() )
 		{
 			final R denom = ( re.mult(re) ).add( im.mult(im).negate() );
-			final R div = denom.invert();
+			final R div = denom.invertLeft();
 			final R c = re.mult( div );
 			final R d = im.mult( div ).negate();
 			return( new ComplexElem<R,S>( c , d ) );
@@ -90,7 +91,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 			if( b != null ) sel.setVal(BigInteger.ZERO, BigInteger.ONE, b);
 			if( a != null ) sel.setVal(BigInteger.ONE, BigInteger.ONE, a);
 			
-			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invert();
+			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invertLeft();
 			final GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S> gfac =
 					new GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
 			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvc =
@@ -112,7 +113,58 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 		}
 	}
 	
-	private ComplexElem<R, S> conjugate() throws NotInvertibleException { 
+	@Override
+	public ComplexElem<R, S> invertRight() throws NotInvertibleException {
+		if( re.getFac().isMultCommutative() )
+		{
+			final R denom = ( re.mult(re) ).add( im.mult(im).negate() );
+			final R div = denom.invertRight();
+			final R c = re.mult( div );
+			final R d = im.mult( div ).negate();
+			return( new ComplexElem<R,S>( c , d ) );
+		}
+		else
+		{
+			final NumDimensions nd = new NumDimensions()
+			{
+				public BigInteger getVal()
+				{
+					return( BigInteger.valueOf( 2 ) );
+				}
+			};
+			final SquareMatrixElemFactory<NumDimensions,R,S> sfac = 
+					new SquareMatrixElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
+			final SquareMatrixElem<NumDimensions,R,S> sel = sfac.zero();
+			final R a = re;
+			final R b = im;
+			if( a != null ) sel.setVal(BigInteger.ZERO, BigInteger.ZERO, a);
+			if( b != null ) sel.setVal(BigInteger.ONE, BigInteger.ZERO, b.negate());
+			if( b != null ) sel.setVal(BigInteger.ZERO, BigInteger.ONE, b);
+			if( a != null ) sel.setVal(BigInteger.ONE, BigInteger.ONE, a);
+			
+			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invertRight();
+			final GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S> gfac =
+					new GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
+			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvc =
+					gfac.zero();
+			
+			final HashSet<BigInteger> gvcKey0 = new HashSet<BigInteger>();
+			gvcKey0.add( BigInteger.ZERO );
+			final HashSet<BigInteger> gvcKey1 = new HashSet<BigInteger>();
+			gvcKey1.add( BigInteger.ONE );
+			
+			gvc.setVal(gvcKey0, this.getFac().getFac().identity());
+			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvo =
+					gfac.zero();
+			gvc.rowVectorMult(seli, gvo);
+			
+			final R c = gvo.getVal(gvcKey0, this.getFac().getFac() );
+			final R d = gvo.getVal(gvcKey1, this.getFac().getFac() );
+			return( new ComplexElem<R,S>( c , d ) );
+		}
+	}
+	
+	private ComplexElem<R, S> conjugateLeft() throws NotInvertibleException { 
 		if( re.getFac().isMultCommutative() )
 		{
 			final R c = re;
@@ -138,7 +190,55 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 			if( b != null ) sel.setVal(BigInteger.ZERO, BigInteger.ONE, b);
 			if( a != null ) sel.setVal(BigInteger.ONE, BigInteger.ONE, a);
 			
-			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invert();
+			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invertLeft();
+			final GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S> gfac =
+					new GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
+			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvc =
+					gfac.zero();
+			
+			final HashSet<BigInteger> gvcKey0 = new HashSet<BigInteger>();
+			gvcKey0.add( BigInteger.ZERO );
+			final HashSet<BigInteger> gvcKey1 = new HashSet<BigInteger>();
+			gvcKey1.add( BigInteger.ONE );
+			
+			gvc.setVal(gvcKey0, ( a.mult(a) ).add( b.mult(b).negate() ) );
+			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvo =
+					gfac.zero();
+			gvc.rowVectorMult(seli, gvo);
+			
+			final R c = gvo.getVal(gvcKey0, this.getFac().getFac() );
+			final R d = gvo.getVal(gvcKey1, this.getFac().getFac() );
+			return( new ComplexElem<R,S>( c , d ) );
+		}
+	}
+	
+	private ComplexElem<R, S> conjugateRight() throws NotInvertibleException { 
+		if( re.getFac().isMultCommutative() )
+		{
+			final R c = re;
+			final R d = im.negate();
+			return( new ComplexElem<R,S>( c , d ) );
+		}
+		else
+		{
+			final NumDimensions nd = new NumDimensions()
+			{
+				public BigInteger getVal()
+				{
+					return( BigInteger.valueOf( 2 ) );
+				}
+			};
+			final SquareMatrixElemFactory<NumDimensions,R,S> sfac = 
+					new SquareMatrixElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
+			final SquareMatrixElem<NumDimensions,R,S> sel = sfac.zero();
+			final R a = re;
+			final R b = im;
+			if( a != null ) sel.setVal(BigInteger.ZERO, BigInteger.ZERO, a);
+			if( b != null ) sel.setVal(BigInteger.ONE, BigInteger.ZERO, b.negate());
+			if( b != null ) sel.setVal(BigInteger.ZERO, BigInteger.ONE, b);
+			if( a != null ) sel.setVal(BigInteger.ONE, BigInteger.ONE, a);
+			
+			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invertRight();
 			final GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S> gfac =
 					new GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
 			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvc =
@@ -173,9 +273,15 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 		{
 			switch( (ComplexElem.ComplexCmd) id )
 			{
-				case CONJUGATE:
+				case CONJUGATE_LEFT:
 				{
-					return( conjugate() );
+					return( conjugateLeft() );
+				}
+				// break;
+				
+				case CONJUGATE_RIGHT:
+				{
+					return( conjugateRight() );
 				}
 				// break;
 			}
@@ -187,7 +293,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	
 	@Override
 	public ComplexElemFactory<R, S> getFac() {
-		return( new ComplexElemFactory<R,S>( (S)( re.getFac() ) ) );
+		return( new ComplexElemFactory<R,S>( this.getFac().getFac() ) );
 	}
 
 	

@@ -43,7 +43,17 @@ public class DoubleElem extends Elem<DoubleElem, DoubleElemFactory> {
 	}
 
 	@Override
-	public DoubleElem invert() throws NotInvertibleException {
+	public DoubleElem invertLeft() throws NotInvertibleException {
+		final DoubleElem de = new DoubleElem( 1.0 / d );
+		if( Double.isNaN( de.getVal() ) )
+		{
+			throw( new NotInvertibleException() );
+		}
+		return( de );
+	}
+	
+	@Override
+	public DoubleElem invertRight() throws NotInvertibleException {
 		final DoubleElem de = new DoubleElem( 1.0 / d );
 		if( Double.isNaN( de.getVal() ) )
 		{
