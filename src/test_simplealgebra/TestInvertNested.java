@@ -42,6 +42,22 @@ import simplealgebra.SquareMatrixElemFactory;
  */
 public class TestInvertNested extends TestCase {
 	
+	/**
+	 * Test method for {@link simplealgebra.SquareMatrixElem#invertLeft()}.
+	 */
+	public void testInvertLeft() throws NotInvertibleException
+	{
+		seedTestInvertLeft( 1111 );
+		seedTestInvertLeft( 2222 );
+		seedTestInvertLeft( 3333 );
+		seedTestInvertLeft( 4444 );
+		seedTestInvertLeft( 5555 );
+		seedTestInvertLeft( 6666 );
+		seedTestInvertLeft( 7777 );
+		seedTestInvertLeft( 8888 );
+		seedTestInvertLeft( 9999 );
+	}
+	
 	
 	protected SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory> generateMat( final Random rand,
 			SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory> se )
@@ -55,7 +71,7 @@ public class TestInvertNested extends TestCase {
 		{
 			for( j = 0 ; j < 4 ; j++ )
 			{
-				DoubleElem val = new DoubleElem( rand.nextDouble() );
+				DoubleElem val = new DoubleElem( 2.0 * ( rand.nextDouble() ) - 1.0 );
 				mat.setVal( BigInteger.valueOf(i) , BigInteger.valueOf(j) , val );
 			}
 		}
@@ -67,11 +83,11 @@ public class TestInvertNested extends TestCase {
 	/**
 	 * Test method for {@link simplealgebra.SquareMatrixElem#invertLeft()}.
 	 */
-	public void testInvertLeft() throws NotInvertibleException {
+	private void seedTestInvertLeft( long seed ) throws NotInvertibleException {
 		
 		final Random rand = new Random();
 		
-		rand.setSeed( 3333 );
+		rand.setSeed( seed );
 		
 		final TestDimensionFour td = new TestDimensionFour();
 		
@@ -130,12 +146,12 @@ public class TestInvertNested extends TestCase {
 						final double matchVal = ( i == j ) && ( i2 == j2 ) ? 1.0 : 0.0;
 						
 						Assert.assertEquals( matchVal , 
-								shouldBeIdentA.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j), se ).
-								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2), dl ).getVal() , 1E-7 );
+								shouldBeIdentA.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j) ).
+								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2) ).getVal() , 1E-7 );
 						
 						Assert.assertEquals( matchVal , 
-								shouldBeIdentB.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j), se ).
-								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2), dl ).getVal() , 1E-7 );
+								shouldBeIdentB.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j) ).
+								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2) ).getVal() , 1E-7 );
 						
 					}
 				}
@@ -143,16 +159,33 @@ public class TestInvertNested extends TestCase {
 		}
 		
 	}
+	
+	
+	/**
+	 * Test method for {@link simplealgebra.SquareMatrixElem#invertRight()}.
+	 */
+	public void testInvertRight() throws NotInvertibleException
+	{
+		seedTestInvertRight( 1111 );
+		seedTestInvertRight( 2222 );
+		seedTestInvertRight( 3333 );
+		seedTestInvertRight( 4444 );
+		seedTestInvertRight( 5555 );
+		seedTestInvertRight( 6666 );
+		seedTestInvertRight( 7777 );
+		seedTestInvertRight( 8888 );
+		seedTestInvertRight( 9999 );
+	}
 
 	
 	/**
 	 * Test method for {@link simplealgebra.SquareMatrixElem#invertRight()}.
 	 */
-	public void testInvertRight() throws NotInvertibleException {
+	private void seedTestInvertRight( long seed ) throws NotInvertibleException {
 		
 		final Random rand = new Random();
 		
-		rand.setSeed( 3333 );
+		rand.setSeed( seed );
 		
 		final TestDimensionFour td = new TestDimensionFour();
 		

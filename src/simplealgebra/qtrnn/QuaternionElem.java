@@ -363,7 +363,15 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 				final HashSet<BigInteger> keyJ = ita.next();
 				final R rowVectMatVal = rowVectMat.get( keyJ );
 				final R val = rowVectInVal.mult( rowVectMatVal );
-				rowVectorOut.setVal(keyJ, val.add( rowVectorOut.get(keyJ) ) );
+				final R addVal = rowVectorOut.get(keyJ);
+				if( addVal != null )
+				{
+					rowVectorOut.setVal(keyJ, val.add( addVal ) );
+				}
+				else
+				{
+					rowVectorOut.setVal(keyJ, val );
+				}
 			}
 		}
 	}
@@ -387,7 +395,15 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 				final HashSet<BigInteger> keyI = ita.next();
 				final R colVectMatVal = colVectMat.get( keyI );
 				final R val = colVectMatVal.mult( colVectInVal );
-				colVectorOut.setVal(keyI, val.add( colVectorOut.get(keyI) ) );
+				final R addVal = colVectorOut.get(keyI);
+				if( addVal != null )
+				{
+					colVectorOut.setVal(keyI, val.add( addVal ) );
+				}
+				else
+				{
+					colVectorOut.setVal(keyI, val );
+				}
 			}
 		}
 	}
@@ -405,7 +421,7 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 	}
 	
 	
-	public R getVal( HashSet<BigInteger> el , S fac )
+	public R getVal( HashSet<BigInteger> el )
 	{
 		R val = map.get( el );
 		return( val != null ? val : fac.zero() );

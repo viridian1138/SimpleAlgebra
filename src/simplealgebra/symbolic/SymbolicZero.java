@@ -57,6 +57,18 @@ public class SymbolicZero<R extends Elem<R,?>, S extends ElemFactory<R,S>> exten
 	public String writeString( ) {
 		return( "ZERO" );
 	}
+	
+	@Override
+	public SymbolicElem<R,S> invertLeft( ) throws NotInvertibleException
+	{
+		throw( new NotInvertibleException() );
+	}
+	
+	@Override
+	public SymbolicElem<R,S> invertRight( ) throws NotInvertibleException
+	{
+		throw( new NotInvertibleException() );
+	}
 
 }
 

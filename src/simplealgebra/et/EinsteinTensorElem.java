@@ -496,7 +496,7 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 	}
 	
 	
-	public R getVal( ArrayList<BigInteger> el , S fac )
+	public R getVal( ArrayList<BigInteger> el )
 	{
 		R val = map.get( el );
 		return( val != null ? val : fac.zero() );

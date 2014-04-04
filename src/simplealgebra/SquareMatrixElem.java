@@ -218,7 +218,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			{
 				if( destRow.compareTo(srcRow) != 0 )
 				{
-					R mult = this.getVal(destRow, srcRow, fac);
+					R mult = this.getVal(destRow, srcRow);
 					rowSubtractLeft( srcRow , destRow , mult );
 					ret.rowSubtractLeft(srcRow, destRow, mult);
 				}
@@ -252,7 +252,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			{
 				if( destRow.compareTo(srcRow) != 0 )
 				{
-					R mult = this.getVal(destRow, srcRow, fac);
+					R mult = this.getVal(destRow, srcRow);
 					rowSubtractRight( srcRow , destRow , mult );
 					ret.rowSubtractRight(srcRow, destRow, mult);
 				}
@@ -550,7 +550,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
-	public R getVal( BigInteger row , BigInteger col , S fac )
+	public R getVal( BigInteger row , BigInteger col )
 	{
 		HashMap<BigInteger,R> subMap = rowMap.get( row );
 		if( subMap != null )

@@ -29,6 +29,14 @@ import java.util.HashSet;
 import simplealgebra.ga.GeometricAlgebraMultivectorElem;
 import simplealgebra.ga.GeometricAlgebraMultivectorElemFactory;
 
+/**
+ * Complex number for representing e.g. phasors in electrical circuit theory.
+ * 
+ * @author thorngreen
+ *
+ * @param <R>
+ * @param <S>
+ */
 public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	extends MutableElem<R,ComplexElem<R,S>,ComplexElemFactory<R,S>>
 	{
@@ -66,7 +74,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	public ComplexElem<R, S> invertLeft() throws NotInvertibleException {
 		if( re.getFac().isMultCommutative() )
 		{
-			final R denom = ( re.mult(re) ).add( im.mult(im).negate() );
+			final R denom = ( re.mult(re) ).add( im.mult(im) );
 			final R div = denom.invertLeft();
 			final R c = re.mult( div );
 			final R d = im.mult( div ).negate();
@@ -107,8 +115,8 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 					gfac.zero();
 			gvc.rowVectorMult(seli, gvo);
 			
-			final R c = gvo.getVal(gvcKey0, this.getFac().getFac() );
-			final R d = gvo.getVal(gvcKey1, this.getFac().getFac() );
+			final R c = gvo.getVal(gvcKey0 );
+			final R d = gvo.getVal(gvcKey1 );
 			return( new ComplexElem<R,S>( c , d ) );
 		}
 	}
@@ -117,7 +125,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	public ComplexElem<R, S> invertRight() throws NotInvertibleException {
 		if( re.getFac().isMultCommutative() )
 		{
-			final R denom = ( re.mult(re) ).add( im.mult(im).negate() );
+			final R denom = ( re.mult(re) ).add( im.mult(im) );
 			final R div = denom.invertRight();
 			final R c = re.mult( div );
 			final R d = im.mult( div ).negate();
@@ -158,8 +166,8 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 					gfac.zero();
 			gvc.rowVectorMult(seli, gvo);
 			
-			final R c = gvo.getVal(gvcKey0, this.getFac().getFac() );
-			final R d = gvo.getVal(gvcKey1, this.getFac().getFac() );
+			final R c = gvo.getVal(gvcKey0 );
+			final R d = gvo.getVal(gvcKey1 );
 			return( new ComplexElem<R,S>( c , d ) );
 		}
 	}
@@ -206,8 +214,8 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 					gfac.zero();
 			gvc.rowVectorMult(seli, gvo);
 			
-			final R c = gvo.getVal(gvcKey0, this.getFac().getFac() );
-			final R d = gvo.getVal(gvcKey1, this.getFac().getFac() );
+			final R c = gvo.getVal(gvcKey0 );
+			final R d = gvo.getVal(gvcKey1 );
 			return( new ComplexElem<R,S>( c , d ) );
 		}
 	}
@@ -254,8 +262,8 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 					gfac.zero();
 			gvc.rowVectorMult(seli, gvo);
 			
-			final R c = gvo.getVal(gvcKey0, this.getFac().getFac() );
-			final R d = gvo.getVal(gvcKey1, this.getFac().getFac() );
+			final R c = gvo.getVal(gvcKey0 );
+			final R d = gvo.getVal(gvcKey1 );
 			return( new ComplexElem<R,S>( c , d ) );
 		}
 	}
