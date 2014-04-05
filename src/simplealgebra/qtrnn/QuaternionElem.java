@@ -231,7 +231,7 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 	
 	
 	@Override
-	public QuaternionElem<U, R, S> mutate( Mutator<R> mutr ) {
+	public QuaternionElem<U, R, S> mutate( Mutator<R> mutr ) throws NotInvertibleException {
 		QuaternionElem<U,R,S> ret = new QuaternionElem<U,R,S>(fac,dim);
 		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
 		while( it.hasNext() )

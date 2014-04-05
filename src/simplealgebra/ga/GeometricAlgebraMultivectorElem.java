@@ -224,7 +224,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	
 	
 	@Override
-	public GeometricAlgebraMultivectorElem<U, R, S> mutate( Mutator<R> mutr ) {
+	public GeometricAlgebraMultivectorElem<U, R, S> mutate( Mutator<R> mutr ) throws NotInvertibleException {
 		GeometricAlgebraMultivectorElem<U,R,S> ret = new GeometricAlgebraMultivectorElem<U,R,S>(fac,dim);
 		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
 		while( it.hasNext() )

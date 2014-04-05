@@ -165,7 +165,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	
 	
 	@Override
-	public SquareMatrixElem<U, R, S> mutate( Mutator<R> mutr ) {
+	public SquareMatrixElem<U, R, S> mutate( Mutator<R> mutr ) throws NotInvertibleException {
 		SquareMatrixElem<U,R,S> ret = new SquareMatrixElem<U,R,S>(fac,dim);
 		Iterator<BigInteger> rowi = rowMap.keySet().iterator();
 		while( rowi.hasNext() )

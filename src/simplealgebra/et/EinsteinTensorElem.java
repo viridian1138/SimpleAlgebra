@@ -345,7 +345,7 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 	
 	
 	@Override
-	public EinsteinTensorElem<Z, R, S> mutate( Mutator<R> mutr ) {
+	public EinsteinTensorElem<Z, R, S> mutate( Mutator<R> mutr ) throws NotInvertibleException {
 		EinsteinTensorElem<Z,R,S> ret = new EinsteinTensorElem<Z,R,S>(fac, covariantIndices , contravariantIndices);
 		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
 		while( it.hasNext() )

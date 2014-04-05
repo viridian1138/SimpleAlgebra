@@ -39,7 +39,7 @@ public abstract class MutableElem<T extends Elem<T,?>, U extends MutableElem<T,U
 		{
 
 			@Override
-			public U mutate(U in) {
+			public U mutate(U in) throws NotInvertibleException {
 				return( in.mutate( elem ) );
 			}
 

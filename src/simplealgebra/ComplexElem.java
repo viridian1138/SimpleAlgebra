@@ -66,7 +66,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	}
 	
 	@Override
-	public ComplexElem<R, S> mutate( Mutator<R> mutr ) {
+	public ComplexElem<R, S> mutate( Mutator<R> mutr ) throws NotInvertibleException {
 		return( new ComplexElem<R,S>( mutr.mutate( re ) , mutr.mutate( im ) ) );
 	}
 
@@ -209,7 +209,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 			final HashSet<BigInteger> gvcKey1 = new HashSet<BigInteger>();
 			gvcKey1.add( BigInteger.ONE );
 			
-			gvc.setVal(gvcKey0, ( a.mult(a) ).add( b.mult(b).negate() ) );
+			gvc.setVal(gvcKey0, ( a.mult(a) ).add( b.mult(b) ) );
 			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvo =
 					gfac.zero();
 			gvc.rowVectorMult(seli, gvo);
@@ -257,7 +257,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 			final HashSet<BigInteger> gvcKey1 = new HashSet<BigInteger>();
 			gvcKey1.add( BigInteger.ONE );
 			
-			gvc.setVal(gvcKey0, ( a.mult(a) ).add( b.mult(b).negate() ) );
+			gvc.setVal(gvcKey0, ( a.mult(a) ).add( b.mult(b) ) );
 			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvo =
 					gfac.zero();
 			gvc.rowVectorMult(seli, gvo);

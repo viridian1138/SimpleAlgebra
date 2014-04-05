@@ -143,8 +143,6 @@ public class TestPhasorExample extends TestCase {
 		}
 		
 		
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!! ran out of time at this point !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
 		
 		
 		final GeometricAlgebraMultivectorElemFactory<TestDimensionTwo,ComplexElem<DoubleElem,DoubleElemFactory>,ComplexElemFactory<DoubleElem,DoubleElemFactory>> vl =
@@ -180,31 +178,33 @@ public class TestPhasorExample extends TestCase {
 		inColumnVect.colVectorMult(invert, outColumnVect);
 		
 		
-		System.out.println( "--------------------" );
+		final ComplexElem<DoubleElem,DoubleElemFactory> iA = 
+				invert.getVal(BigInteger.ZERO, BigInteger.ZERO).mult(a0).add(
+						invert.getVal(BigInteger.ZERO, BigInteger.ONE).mult(a1));
 		
+		final ComplexElem<DoubleElem,DoubleElemFactory> iB = 
+				invert.getVal(BigInteger.ONE, BigInteger.ZERO).mult(a0).add(
+						invert.getVal(BigInteger.ONE, BigInteger.ONE).mult(a1));
 		
-		System.out.println( invert.getVal(BigInteger.ZERO, BigInteger.ZERO).getRe().getVal() );
-		
-		System.out.println( invert.getVal(BigInteger.ZERO, BigInteger.ONE).getRe().getVal() );
-		
-		
-		System.out.println( invert.getVal(BigInteger.ONE, BigInteger.ZERO).getRe().getVal() );
-		
-		System.out.println( invert.getVal(BigInteger.ONE, BigInteger.ONE).getRe().getVal() );
-		
-		
-		System.out.println( "--------------------" );
+		final ComplexElem<DoubleElem,DoubleElemFactory> iC = iA.add( iB );
 
 		
 		
-		System.out.println( outColumnVect.getVal( vectA0 ).getRe().getVal() );
 		
-		System.out.println( outColumnVect.getVal( vectA0 ).getIm().getVal() );
+		Assert.assertEquals( iA.getRe().getVal() , 
+				outColumnVect.getVal( vectA0 ).getRe().getVal() , 1E-5 );
+		
+		Assert.assertEquals( iA.getIm().getVal() , 
+				outColumnVect.getVal( vectA0 ).getIm().getVal() , 1E-5 );
 		
 		
-		System.out.println( outColumnVect.getVal( vectA1 ).getRe().getVal() );
 		
-		System.out.println( outColumnVect.getVal( vectA1 ).getIm().getVal() );
+		Assert.assertEquals( iB.getRe().getVal() , 
+				outColumnVect.getVal( vectA1 ).getRe().getVal() , 1E-5 );
+		
+		Assert.assertEquals( iB.getIm().getVal() , 
+				outColumnVect.getVal( vectA1 ).getIm().getVal() , 1E-5 );
+		
 		
 		
 		

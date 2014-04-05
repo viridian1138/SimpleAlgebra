@@ -22,19 +22,32 @@
 
 
 
+package test_simplealgebra;
 
-package simplealgebra;
+import java.math.BigInteger;
 
+import simplealgebra.NumDimensions;
 
+/**
+ * @author thorngreen
+ *
+ */
+public final class TestDimensionThree extends NumDimensions {
 
+	/**
+	 * 
+	 */
+	public TestDimensionThree() {
+		// TODO Auto-generated constructor stub
+	}
 
+	/* (non-Javadoc)
+	 * @see simplealgebra.NumDimensions#getVal()
+	 */
+	@Override
+	public BigInteger getVal() {
+		return( BigInteger.valueOf(3) );
+	}
 
-public interface Mutator<T extends Elem<T,?>> {
-
-	public T mutate( T in ) throws NotInvertibleException;
-	
-	public String writeString();
-	
 }
-
 

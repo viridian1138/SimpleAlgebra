@@ -32,7 +32,7 @@ import simplealgebra.NumDimensions;
  * @author thorngreen
  *
  */
-public class TestDimensionTwo extends NumDimensions {
+public final class TestDimensionTwo extends NumDimensions {
 
 	/**
 	 * 

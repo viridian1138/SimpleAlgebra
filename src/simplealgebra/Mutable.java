@@ -29,7 +29,7 @@ package simplealgebra;
 
 public interface Mutable<R extends Mutable<R,?,?>, S extends Elem<S,?>, T extends Elem<T,?>> {
 	
-	public S mutate( Mutator<T> in );
+	public S mutate( Mutator<T> in ) throws NotInvertibleException;
 
 }
 
