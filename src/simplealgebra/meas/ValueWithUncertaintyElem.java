@@ -86,14 +86,14 @@ public class ValueWithUncertaintyElem<R extends Elem<R,?>, S extends ElemFactory
 	@Override
 	public ValueWithUncertaintyElem<R, S> invertLeft() throws NotInvertibleException {
 		final R inv = value.invertLeft();
-		final R invSq = inv.mult(inv);
+		final R invSq = abs( inv.mult(inv) );
 		return( new ValueWithUncertaintyElem<R,S>( inv , invSq.mult(uncertainty) ) );
 	}
 	
 	@Override
 	public ValueWithUncertaintyElem<R, S> invertRight() throws NotInvertibleException {
 		final R inv = value.invertRight();
-		final R invSq = inv.mult(inv);
+		final R invSq = abs( inv.mult(inv) );
 		return( new ValueWithUncertaintyElem<R,S>( inv , uncertainty.mult(invSq) ) );
 	}
 	
@@ -126,7 +126,7 @@ public class ValueWithUncertaintyElem<R extends Elem<R,?>, S extends ElemFactory
 	
 	@Override
 	public ValueWithUncertaintyElemFactory<R, S> getFac() {
-		return( new ValueWithUncertaintyElemFactory<R,S>( this.getFac().getFac() ) );
+		return( new ValueWithUncertaintyElemFactory<R,S>( (S)( value.getFac() ) ) );
 	}
 
 	

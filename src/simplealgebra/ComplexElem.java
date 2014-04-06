@@ -301,7 +301,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 	
 	@Override
 	public ComplexElemFactory<R, S> getFac() {
-		return( new ComplexElemFactory<R,S>( this.getFac().getFac() ) );
+		return( new ComplexElemFactory<R,S>( (S)( re.getFac() ) ) );
 	}
 
 	
