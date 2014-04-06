@@ -25,6 +25,8 @@
 
 package simplealgebra;
 
+import java.util.ArrayList;
+
 public class DoubleElem extends Elem<DoubleElem, DoubleElemFactory> {
 
 	@Override
@@ -70,6 +72,24 @@ public class DoubleElem extends Elem<DoubleElem, DoubleElemFactory> {
 	@Override
 	public DoubleElemFactory getFac() {
 		return( new DoubleElemFactory() );
+	}
+	
+	@Override
+	public DoubleElem handleOptionalOp( Object id , ArrayList<DoubleElem> args ) throws NotInvertibleException
+	{
+		if( id instanceof AbsoluteValue )
+		{
+			switch( (AbsoluteValue) id )
+			{
+				case ABSOLUTE_VALUE:
+				{
+					return( new DoubleElem( Math.abs( d ) ) );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
 	}
 	
 	

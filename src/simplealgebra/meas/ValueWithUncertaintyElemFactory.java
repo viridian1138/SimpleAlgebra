@@ -2,8 +2,6 @@
 
 
 
-
-
 //$$strtCprt
 /**
 * Simple Algebra 
@@ -24,54 +22,40 @@
 
 
 
+package simplealgebra.meas;
 
-
-package simplealgebra.bigfixedpoint;
-
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 import simplealgebra.AbsoluteValue;
+import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.symbolic.SymbolicAbsoluteValue;
 import simplealgebra.symbolic.SymbolicElem;
 
-public class BigFixedPointElemFactory<T extends Precision> extends ElemFactory<BigFixedPointElem<T>, BigFixedPointElemFactory<T>> {
+public class ValueWithUncertaintyElemFactory<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends ElemFactory<ValueWithUncertaintyElem<R,S>, ValueWithUncertaintyElemFactory<R,S>> {
+
 	
-	public BigFixedPointElemFactory( T _prec )
+	
+	public ValueWithUncertaintyElemFactory( S _fac )
 	{
-		prec = _prec;
+		fac = _fac;
 	}
 
-	
-	private T prec;
-
-
-
 	@Override
-	public BigFixedPointElem<T> identity() {
-		return( new BigFixedPointElem<T>( prec.getVal() , prec ) );
+	public ValueWithUncertaintyElem<R, S> identity() {
+		return( new ValueWithUncertaintyElem<R,S>( fac.identity() , fac.zero() ) );
 	}
 
-
-
 	@Override
-	public BigFixedPointElem<T> zero() {
-		return( new BigFixedPointElem<T>( BigInteger.ZERO , prec ) );
+	public ValueWithUncertaintyElem<R, S> zero() {
+		return( new ValueWithUncertaintyElem<R,S>( fac.zero() , fac.zero() ) );
 	}
 	
 	
 	@Override
-	public boolean isMultCommutative()
-	{
-		return( true );
-	}
-	
-	
-	@Override
-	public SymbolicElem<BigFixedPointElem<T>, BigFixedPointElemFactory<T>> handleSymbolicOptionalOp( Object id , 
-			ArrayList<SymbolicElem<BigFixedPointElem<T>, BigFixedPointElemFactory<T>>> args )  throws NotInvertibleException
+	public SymbolicElem<ValueWithUncertaintyElem<R, S>, ValueWithUncertaintyElemFactory<R,S>> handleSymbolicOptionalOp( Object id , 
+			ArrayList<SymbolicElem<ValueWithUncertaintyElem<R, S>, ValueWithUncertaintyElemFactory<R,S>>> args )  throws NotInvertibleException
 	{
 		if( id instanceof AbsoluteValue )
 		{
@@ -79,9 +63,9 @@ public class BigFixedPointElemFactory<T extends Precision> extends ElemFactory<B
 			{
 				case ABSOLUTE_VALUE:
 				{
-					SymbolicElem<BigFixedPointElem<T>, BigFixedPointElemFactory<T>> arg
+					SymbolicElem<ValueWithUncertaintyElem<R, S>, ValueWithUncertaintyElemFactory<R,S>> arg
 						= args.get( 0 );
-					return( new SymbolicAbsoluteValue<BigFixedPointElem<T>, BigFixedPointElemFactory<T>>( arg , arg.getFac().getFac() ) );
+					return( new SymbolicAbsoluteValue<ValueWithUncertaintyElem<R, S>, ValueWithUncertaintyElemFactory<R,S>>( arg , arg.getFac().getFac() ) );
 				}
 				// break;
 				
@@ -90,7 +74,22 @@ public class BigFixedPointElemFactory<T extends Precision> extends ElemFactory<B
 		
 		return( super.handleSymbolicOptionalOp(id, args) );
 	}
-
 	
+	
+	@Override
+	public boolean isMultCommutative()
+	{
+		return( fac.isMultCommutative() );
+	}
+	
+	
+	public S getFac()
+	{
+		return( fac );
+	}
+	
+	
+	private S fac;
+
 }
 

@@ -29,7 +29,9 @@ package simplealgebra.bigfixedpoint;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
+import simplealgebra.AbsoluteValue;
 import simplealgebra.Elem;
 import simplealgebra.NotInvertibleException;
 
@@ -90,6 +92,24 @@ public class BigFixedPointElem<T extends Precision> extends Elem<BigFixedPointEl
 	@Override
 	public BigFixedPointElemFactory<T> getFac() {
 		return( new BigFixedPointElemFactory<T>( prec ) );
+	}
+	
+	@Override
+	public BigFixedPointElem<T> handleOptionalOp( Object id , ArrayList<BigFixedPointElem<T>> args ) throws NotInvertibleException
+	{
+		if( id instanceof AbsoluteValue )
+		{
+			switch( (AbsoluteValue) id )
+			{
+				case ABSOLUTE_VALUE:
+				{
+					return( new BigFixedPointElem<T>( val.abs() , prec ) );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
 	}
 	
 	public double toDouble( )

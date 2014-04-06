@@ -25,6 +25,11 @@
 
 package simplealgebra;
 
+import java.util.ArrayList;
+
+import simplealgebra.symbolic.SymbolicAbsoluteValue;
+import simplealgebra.symbolic.SymbolicElem;
+
 public class DoubleElemFactory extends ElemFactory<DoubleElem, DoubleElemFactory> {
 
 	@Override
@@ -41,6 +46,28 @@ public class DoubleElemFactory extends ElemFactory<DoubleElem, DoubleElemFactory
 	public boolean isMultCommutative()
 	{
 		return( true );
+	}
+	
+	@Override
+	public SymbolicElem<DoubleElem, DoubleElemFactory> handleSymbolicOptionalOp( Object id , 
+			ArrayList<SymbolicElem<DoubleElem, DoubleElemFactory>> args )  throws NotInvertibleException
+	{
+		if( id instanceof AbsoluteValue )
+		{
+			switch( (AbsoluteValue) id )
+			{
+				case ABSOLUTE_VALUE:
+				{
+					SymbolicElem<DoubleElem, DoubleElemFactory> arg
+						= args.get( 0 );
+					return( new SymbolicAbsoluteValue<DoubleElem, DoubleElemFactory>( arg , arg.getFac().getFac() ) );
+				}
+				// break;
+				
+			}
+		}
+		
+		return( super.handleSymbolicOptionalOp(id, args) );
 	}
 	
 	public DoubleElemFactory()
