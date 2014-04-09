@@ -47,7 +47,9 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 
 	public static enum GeometricAlgebraMultivectorCmd {
 		DOT,
-		WEDGE
+		WEDGE,
+		REVERSE_LEFT,
+		REVERSE_RIGHT
 	};
 	
 	public GeometricAlgebraMultivectorElem( S _fac , U _dim )
@@ -239,14 +241,68 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	
 	@Override
 	public GeometricAlgebraMultivectorElem<U, R, S> invertLeft() throws NotInvertibleException {
-		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if( fac.isMultCommutative() )
+		{
+			final GeometricAlgebraMultivectorElem<U,R,S> r = reverseLeft();
+			final GeometricAlgebraMultivectorElem<U,R,S> rr = this.mult( r );
+			final R sqInv = ( rr.get( new HashSet<BigInteger>() ) ).invertLeft();
+			
+			final Mutator<R> mutr = new Mutator<R>()
+			{
+
+				@Override
+				public R mutate(R in) throws NotInvertibleException {
+					return( in.mult( sqInv ) );
+				}
+
+				@Override
+				public String writeString() {
+					return( "mmult" );
+				}
+				
+			};
+			
+			return( r.mutate( mutr ) );
+		}
+		else
+		{
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			return( null );
+		}
 	}
 	
 	
 	
 	@Override
 	public GeometricAlgebraMultivectorElem<U, R, S> invertRight() throws NotInvertibleException {
-		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if( fac.isMultCommutative() )
+		{
+			final GeometricAlgebraMultivectorElem<U,R,S> r = reverseRight();
+			final GeometricAlgebraMultivectorElem<U,R,S> rr = this.mult( r );
+			final R sqInv = ( rr.get( new HashSet<BigInteger>() ) ).invertRight();
+			
+			final Mutator<R> mutr = new Mutator<R>()
+			{
+
+				@Override
+				public R mutate(R in) throws NotInvertibleException {
+					return( in.mult( sqInv ) );
+				}
+
+				@Override
+				public String writeString() {
+					return( "mmult" );
+				}
+						
+			};
+					
+			return( r.mutate( mutr ) );
+		}
+		else
+		{
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			return( null );
+		}
 	}
 	
 
@@ -263,6 +319,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 		}
 		return( ret );
 	}
+	
 	
 	
 	public void toQuaternion( QuaternionElem<U, R, ?> out )
@@ -445,6 +502,68 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	}
 	
 	
+	
+	private boolean negateFromSize( final int sz )
+	{
+		final int acnt = sz * ( sz - 1 ) / 2;
+		
+		return( ( acnt % 2 ) == 1 );
+	}
+	
+	
+	
+	private GeometricAlgebraMultivectorElem<U, R, S> reverseLeft()
+	{
+		if( fac.isMultCommutative() )
+		{
+			GeometricAlgebraMultivectorElem<U,R,S> ret = new GeometricAlgebraMultivectorElem<U,R,S>(fac,dim);
+			Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+			while( it.hasNext() )
+			{
+				final HashSet<BigInteger> el = it.next();
+				final R vali = map.get( el );
+				final boolean neg = negateFromSize( el.size() );
+				final R valo = neg ? vali.negate() : vali;
+				ret.setVal(el, valo );
+			}
+			return( ret );
+		}
+		else
+		{
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			return( null );
+		}
+	}
+	
+	
+	
+	
+	private GeometricAlgebraMultivectorElem<U, R, S> reverseRight()
+	{
+		if( fac.isMultCommutative() )
+		{
+			GeometricAlgebraMultivectorElem<U,R,S> ret = new GeometricAlgebraMultivectorElem<U,R,S>(fac,dim);
+			Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+			while( it.hasNext() )
+			{
+				final HashSet<BigInteger> el = it.next();
+				final R vali = map.get( el );
+				final boolean neg = negateFromSize( el.size() );
+				final R valo = neg ? vali.negate() : vali;
+				ret.setVal(el, valo );
+			}
+			return( ret );
+		}
+		else
+		{
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			return( null );
+		}
+	}
+	
+	
+	
+	
 	public void rowVectorMult( SquareMatrixElem<U, R, ?> in , 
 			GeometricAlgebraMultivectorElem<U, R, S> rowVectorOut )
 	{
@@ -529,6 +648,19 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 					return( wedge( b ) );
 				}
 				// break;
+				
+				case REVERSE_LEFT:
+				{
+					return( reverseLeft( ) );
+				}
+				// break;
+				
+				case REVERSE_RIGHT:
+				{
+					return( reverseRight( ) );
+				}
+				// break;
+				
 			}
 		}
 		

@@ -98,6 +98,23 @@ public class GeometricAlgebraMultivectorElemFactory<U extends NumDimensions, R e
 					return( new SymbolicWedge<U,R,S>( argA , argB , argA.getFac().getFac() ) );
 				}
 				// break;
+				
+				case REVERSE_LEFT:
+				{
+					SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> argA
+						= args.get( 0 );
+					return( new SymbolicReverseLeft<U,R,S>( argA , argA.getFac().getFac() ) );
+				}
+				// break;
+				
+				case REVERSE_RIGHT:
+				{
+					SymbolicElem<GeometricAlgebraMultivectorElem<U, R, S>, GeometricAlgebraMultivectorElemFactory<U,R,S>> argA
+						= args.get( 0 );
+					return( new SymbolicReverseRight<U,R,S>( argA , argA.getFac().getFac() ) );
+				}
+				// break;
+				
 			}
 		}
 		
