@@ -522,9 +522,12 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			{
 				final HashSet<BigInteger> el = it.next();
 				final R vali = map.get( el );
-				final boolean neg = negateFromSize( el.size() );
-				final R valo = neg ? vali.negate() : vali;
-				ret.setVal(el, valo );
+				if( vali != null )
+				{
+					final boolean neg = negateFromSize( el.size() );
+					final R valo = neg ? vali.negate() : vali;
+					ret.setVal(el, valo );
+				}
 			}
 			return( ret );
 		}
@@ -548,9 +551,12 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			{
 				final HashSet<BigInteger> el = it.next();
 				final R vali = map.get( el );
-				final boolean neg = negateFromSize( el.size() );
-				final R valo = neg ? vali.negate() : vali;
-				ret.setVal(el, valo );
+				if( vali != null )
+				{
+					final boolean neg = negateFromSize( el.size() );
+					final R valo = neg ? vali.negate() : vali;
+					ret.setVal(el, valo );
+				}
 			}
 			return( ret );
 		}
