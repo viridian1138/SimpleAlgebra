@@ -157,6 +157,20 @@ public class SymbolicMult<R extends Elem<R,?>, S extends ElemFactory<R,S>> exten
 		return( "mult( " + ( elemA.writeString() ) + " , " + ( elemB.writeString() ) + " )" );
 	}
 	
+	/**
+	 * @return the elemA
+	 */
+	public SymbolicElem<R, S> getElemA() {
+		return elemA;
+	}
+
+	/**
+	 * @return the elemB
+	 */
+	public SymbolicElem<R, S> getElemB() {
+		return elemB;
+	}
+
 	private SymbolicElem<R,S> elemA;
 	private SymbolicElem<R,S> elemB;
 	

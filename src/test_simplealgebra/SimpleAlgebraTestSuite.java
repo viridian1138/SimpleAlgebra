@@ -47,10 +47,10 @@ public class SimpleAlgebraTestSuite extends TestSuite {
 	}
 	
 	
-	public static void main( String in )
+	public static void main( String[] in )
 	{
 		TestRunner run = new TestRunner();
-		run.doRun( new SimpleAlgebraTestSuite() );
+		run.doRun( suite() );
 	}
 
 

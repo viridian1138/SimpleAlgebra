@@ -535,7 +535,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
-	private R get( BigInteger row , BigInteger col )
+	public R get( BigInteger row , BigInteger col )
 	{
 		HashMap<BigInteger,R> subMap = rowMap.get( row );
 		if( subMap != null )
@@ -563,6 +563,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 		}
 		return( fac.zero() );
 	}
+	
 	
 	public void setVal( BigInteger row , BigInteger col , R val )
 	{
