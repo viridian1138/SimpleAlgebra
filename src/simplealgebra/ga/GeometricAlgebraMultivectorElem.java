@@ -392,6 +392,57 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	}
 	
 	
+	
+	private void handleInvertElemRight( SymbolicElem<R,S> in , 
+			BigInteger row , SquareMatrixElem<NumDimensions,R,S> out )
+	{
+		if( in instanceof SymbolicAdd )
+		{
+			SymbolicAdd<R,S> add = (SymbolicAdd<R,S>) in;
+			handleInvertElemRight( add.getElemA() , row , out );
+			handleInvertElemRight( add.getElemB() , row , out );
+			return;
+		}
+		
+		boolean negate = false;
+		
+		if( in instanceof SymbolicNegate )
+		{
+			SymbolicNegate<R,S> neg = (SymbolicNegate<R,S>) in;
+			negate = true;
+			in = neg.getElem();
+		}
+		
+		SymbolicMult<R,S> mul = (SymbolicMult<R,S>) in;
+		
+		AElem ae = (AElem)( mul.getElemA() );
+		BElem be = (BElem)( mul.getElemB() );
+		
+		R val = map.get( ae.getIndx() );
+		
+		if( negate )
+		{
+			val = val.negate();
+		}
+		
+		
+		BigInteger col = BigInteger.valueOf( be.getCol() );
+		
+		R vl = out.get( row , col );
+		
+		
+		if( vl != null )
+		{
+			out.setVal(row, col, vl.add(val) );
+		}
+		else
+		{
+			out.setVal(row, col, val);
+		}
+		
+	}
+	
+	
 	@Override
 	public GeometricAlgebraMultivectorElem<U, R, S> invertLeft() throws NotInvertibleException {
 		
@@ -483,7 +534,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			ki.setVal(hv, fac.identity() );
 		}
 		
-		ki.colVectorMult(sqInv, ko);
+		ki.colVectorMultLeftDefault(sqInv, ko);
 		
 		
 		
@@ -557,42 +608,175 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 //	}
 	
 	
-	
 	@Override
 	public GeometricAlgebraMultivectorElem<U, R, S> invertRight() throws NotInvertibleException {
-		if( fac.isMultCommutative() )
+		
+		final SymbolicElemFactory<R, S> fc = new SymbolicElemFactory<R, S>( fac );
+		
+		final GeometricAlgebraMultivectorElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aA
+			= new GeometricAlgebraMultivectorElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>>( fc , dim );
+		
+		final GeometricAlgebraMultivectorElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aB
+			= new GeometricAlgebraMultivectorElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>>( fc , dim );
+		
+		final int inSz = map.keySet().size();
+		
+		
+		ArrayList<HashSet<BigInteger>> cols = new ArrayList<HashSet<BigInteger>>( inSz );
+		
+		
+		
+		int count = 0;
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
 		{
-			final GeometricAlgebraMultivectorElem<U,R,S> r = reverseRight();
-			final GeometricAlgebraMultivectorElem<U,R,S> rr = this.mult( r );
-			final R sqInv = ( rr.get( new HashSet<BigInteger>() ) ).invertRight();
-			
-			final Mutator<R> mutr = new Mutator<R>()
+			HashSet<BigInteger> key = it.next();
+			AElem ae = new AElem( fac , key , count );
+			BElem be = new BElem( fac , key , count );
+			aA.setVal(key, ae);
+			aB.setVal(key, be);
+			cols.add( key );
+			count++;
+		}
+		
+		
+		final GeometricAlgebraMultivectorElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aMult = aA.mult( aB );
+		
+		final int outSz = aMult.map.keySet().size();
+		
+		if( outSz != inSz )
+		{
+			throw( new RuntimeException( "Mismatch " + inSz + " " + outSz ) );
+		}
+		
+		final NumDimensions xdim = new NumDimensions()
+		{
+			public BigInteger getVal()
 			{
+				return( BigInteger.valueOf( outSz ) );
+			}
+		};
+		
+	
+		SquareMatrixElemFactory<NumDimensions,R,S> sqfac = new SquareMatrixElemFactory<NumDimensions,R,S>( fac , xdim );
+		
+		SquareMatrixElem<NumDimensions,R,S> sq = sqfac.zero();
+		
+		
 
-				@Override
-				public R mutate(R in) throws NotInvertibleException {
-					return( in.mult( sqInv ) );
-				}
-
-				@Override
-				public String writeString() {
-					return( "mmult" );
-				}
-						
-			};
-			
-			final GeometricAlgebraMultivectorElem<U,R,S> ret = r.mutate( mutr );
-					
-			return( ret );
-		}
-		else
+		int sindex = -1;
+		
+		
+		
+		count = 0;
+		Iterator<HashSet<BigInteger>> ita = aMult.map.keySet().iterator();
+		while( ita.hasNext() )
 		{
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			return( null );
+			HashSet<BigInteger> id = ita.next();
+			handleInvertElemRight( aMult.get( id ) , 
+					BigInteger.valueOf(count) , sq );
+			if( id.size() == 0 )
+			{
+				sindex = count;
+			}
+			count++;
 		}
+		
+		
+		SquareMatrixElem<NumDimensions,R,S> sqInv = sq.invertRight();
+		
+		
+		GeometricAlgebraMultivectorElemFactory<NumDimensions, R, S> kfac = 
+				new GeometricAlgebraMultivectorElemFactory<NumDimensions, R, S>(fac, xdim);
+		
+		GeometricAlgebraMultivectorElem<NumDimensions, R, S> ki = kfac.zero();
+		GeometricAlgebraMultivectorElem<NumDimensions, R, S> ko = kfac.zero();
+		
+		if( sindex >= 0 )
+		{
+			HashSet<BigInteger> hv = new HashSet<BigInteger>();
+			hv.add( BigInteger.valueOf( sindex ) );
+			ki.setVal(hv, fac.identity() );
+		}
+		
+		ki.colVectorMultRight(sqInv, ko);
+		
+		
+		
+		
+//		SquareMatrixElem<NumDimensions,R,S> tst = sqInv.mult( sq );
+//		
+//		int xc;
+//		int yc;
+//		
+//		for( xc = 0 ; xc < outSz ; xc++ )
+//		{
+//			for( yc = 0 ; yc < outSz ; yc++ )
+//			{
+//				R vl = tst.getVal( BigInteger.valueOf( xc ) , BigInteger.valueOf( yc ) );
+//				System.out.println( "#### " + ( (DoubleElem) vl ).getVal() );
+//			}
+//		}
+		
+		
+		
+		GeometricAlgebraMultivectorElem<U, R, S> ret = new GeometricAlgebraMultivectorElem<U, R, S>(fac, dim);
+		
+		
+		for( count = 0 ; count < outSz ; count++ )
+		{
+			HashSet<BigInteger> mm = new HashSet<BigInteger>();
+			mm.add( BigInteger.valueOf( count ) );
+			R val = ko.get( mm );
+			if( val != null )
+			{
+				ret.setVal(cols.get(count), val);
+			}
+		}
+		
+		
+		return( ret );
+		
 	}
 	
+	
+	
+//	@Override
+//	public GeometricAlgebraMultivectorElem<U, R, S> invertRight() throws NotInvertibleException {
+//		if( fac.isMultCommutative() )
+//		{
+//			final GeometricAlgebraMultivectorElem<U,R,S> r = reverseRight();
+//			final GeometricAlgebraMultivectorElem<U,R,S> rr = this.mult( r );
+//			final R sqInv = ( rr.get( new HashSet<BigInteger>() ) ).invertRight();
+//			
+//			final Mutator<R> mutr = new Mutator<R>()
+//			{
+//
+//				@Override
+//				public R mutate(R in) throws NotInvertibleException {
+//					return( in.mult( sqInv ) );
+//				}
+//
+//				@Override
+//				public String writeString() {
+//					return( "mmult" );
+//				}
+//						
+//			};
+//			
+//			final GeometricAlgebraMultivectorElem<U,R,S> ret = r.mutate( mutr );
+//					
+//			return( ret );
+//		}
+//		else
+//		{
+//			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			return( null );
+//		}
+//	}
+//	
 
+	
 
 	@Override
 	public GeometricAlgebraMultivectorElem<U, R, S> divideBy(int val) {
@@ -883,7 +1067,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	}
 	
 	
-	public void colVectorMult( SquareMatrixElem<U, R, ?> in , 
+	public void colVectorMultLeftDefault( SquareMatrixElem<U, R, ?> in , 
 			GeometricAlgebraMultivectorElem<U, R, S> colVectorOut )
 	{
 		final GeometricAlgebraMultivectorElem<U, R, S> colVectIn = this.getGradedPart( BigInteger.ONE );
@@ -913,6 +1097,40 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			}
 		}
 	}
+	
+	
+	
+	public void colVectorMultRight( SquareMatrixElem<U, R, ?> in , 
+			GeometricAlgebraMultivectorElem<U, R, S> colVectorOut )
+	{
+		final GeometricAlgebraMultivectorElem<U, R, S> colVectIn = this.getGradedPart( BigInteger.ONE );
+		final Iterator<HashSet<BigInteger>> it = colVectIn.map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			final HashSet<BigInteger> keyK = it.next();
+			final R colVectInVal = colVectIn.get( keyK );
+			final BigInteger k = keyK.iterator().next();
+			final GeometricAlgebraMultivectorElem<U, R, S> colVectMat = new GeometricAlgebraMultivectorElem<U, R, S>(fac, dim);
+			in.columnVectorToGeometricAlgebra(k, colVectMat);
+			final Iterator<HashSet<BigInteger>> ita = colVectMat.map.keySet().iterator();
+			while( ita.hasNext() )
+			{
+				final HashSet<BigInteger> keyI = ita.next();
+				final R colVectMatVal = colVectMat.get( keyI );
+				final R val = colVectInVal.mult( colVectMatVal );
+				final R addVal = colVectorOut.get(keyI);
+				if( addVal != null )
+				{
+					colVectorOut.setVal(keyI, val.add( addVal ) );
+				}
+				else
+				{
+					colVectorOut.setVal(keyI, val );
+				}
+			}
+		}
+	}
+	
 	
 	
 	@Override

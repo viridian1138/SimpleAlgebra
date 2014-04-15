@@ -175,7 +175,7 @@ public class TestPhasorExample extends TestCase {
 		
 		
 		
-		inColumnVect.colVectorMult(invert, outColumnVect);
+		inColumnVect.colVectorMultLeftDefault(invert, outColumnVect);
 		
 		
 		final ComplexElem<DoubleElem,DoubleElemFactory> iA = 

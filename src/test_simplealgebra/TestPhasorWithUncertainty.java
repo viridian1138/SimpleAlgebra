@@ -214,7 +214,7 @@ public class TestPhasorWithUncertainty extends TestCase {
 		
 		
 		
-		inColumnVect.colVectorMult(invert, outColumnVect);
+		inColumnVect.colVectorMultLeftDefault(invert, outColumnVect);
 		
 		
 		final ComplexElem<ValueWithUncertaintyElem<DoubleElem,DoubleElemFactory>,ValueWithUncertaintyElemFactory<DoubleElem,DoubleElemFactory>> iA = 

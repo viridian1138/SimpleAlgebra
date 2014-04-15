@@ -160,7 +160,7 @@ public class TestMultivectorInvert extends TestCase {
 	 */
 	public void testInvertRight() throws NotInvertibleException
 	{
-		/* seedTestInvertRight( 1111 );
+		seedTestInvertRight( 1111 );
 		seedTestInvertRight( 2222 );
 		seedTestInvertRight( 3333 );
 		seedTestInvertRight( 4444 );
@@ -168,7 +168,7 @@ public class TestMultivectorInvert extends TestCase {
 		seedTestInvertRight( 6666 );
 		seedTestInvertRight( 7777 );
 		seedTestInvertRight( 8888 );
-		seedTestInvertRight( 9999 ); */
+		seedTestInvertRight( 9999 );
 	}
 
 	
@@ -217,7 +217,7 @@ public class TestMultivectorInvert extends TestCase {
 		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> shouldBeIdentB = inv.mult( mv );
 		
 		
-		// validateIsUnit( shouldBeIdentA );
+		validateIsUnit( shouldBeIdentA );
 		
 		validateIsUnit( shouldBeIdentB );
 		

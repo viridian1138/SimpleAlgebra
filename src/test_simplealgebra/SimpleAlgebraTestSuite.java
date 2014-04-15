@@ -43,6 +43,7 @@ public class SimpleAlgebraTestSuite extends TestSuite {
 		s.addTestSuite( TestPhasorExample.class );
 		s.addTestSuite( TestDiracBraKetNotation.class );
 		s.addTestSuite( TestPhasorWithUncertainty.class );
+		s.addTestSuite( TestMultivectorInvert.class );
 		return( s );
 	}
 	
