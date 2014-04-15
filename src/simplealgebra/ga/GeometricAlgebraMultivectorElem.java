@@ -395,7 +395,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	@Override
 	public GeometricAlgebraMultivectorElem<U, R, S> invertLeft() throws NotInvertibleException {
 		
-		final SymbolicElemFactory<R, S> fc = new SymbolicElemFactory<R, S>( (S) getFac() );
+		final SymbolicElemFactory<R, S> fc = new SymbolicElemFactory<R, S>( fac );
 		
 		final GeometricAlgebraMultivectorElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aA
 			= new GeometricAlgebraMultivectorElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>>( fc , dim );
@@ -415,8 +415,8 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 		while( it.hasNext() )
 		{
 			HashSet<BigInteger> key = it.next();
-			AElem ae = new AElem( (S) getFac() , key , count );
-			BElem be = new BElem( (S) getFac() , key , count );
+			AElem ae = new AElem( fac , key , count );
+			BElem be = new BElem( fac , key , count );
 			aA.setVal(key, ae);
 			aB.setVal(key, be);
 			cols.add( key );
@@ -442,7 +442,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 		};
 		
 	
-		SquareMatrixElemFactory<NumDimensions,R,S> sqfac = new SquareMatrixElemFactory<NumDimensions,R,S>( (S) getFac() , xdim );
+		SquareMatrixElemFactory<NumDimensions,R,S> sqfac = new SquareMatrixElemFactory<NumDimensions,R,S>( fac , xdim );
 		
 		SquareMatrixElem<NumDimensions,R,S> sq = sqfac.zero();
 		
@@ -484,6 +484,24 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 		}
 		
 		ki.colVectorMult(sqInv, ko);
+		
+		
+		
+		
+//		SquareMatrixElem<NumDimensions,R,S> tst = sqInv.mult( sq );
+//		
+//		int xc;
+//		int yc;
+//		
+//		for( xc = 0 ; xc < outSz ; xc++ )
+//		{
+//			for( yc = 0 ; yc < outSz ; yc++ )
+//			{
+//				R vl = tst.getVal( BigInteger.valueOf( xc ) , BigInteger.valueOf( yc ) );
+//				System.out.println( "#### " + ( (DoubleElem) vl ).getVal() );
+//			}
+//		}
+		
 		
 		
 		GeometricAlgebraMultivectorElem<U, R, S> ret = new GeometricAlgebraMultivectorElem<U, R, S>(fac, dim);

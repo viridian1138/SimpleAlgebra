@@ -90,7 +90,7 @@ public class TestMultivectorInvert extends TestCase {
 	 */
 	public void testInvertLeft() throws NotInvertibleException
 	{
-		/* seedTestInvertLeft( 1111 );
+		seedTestInvertLeft( 1111 );
 		seedTestInvertLeft( 2222 );
 		seedTestInvertLeft( 3333 );
 		seedTestInvertLeft( 4444 );
@@ -98,7 +98,7 @@ public class TestMultivectorInvert extends TestCase {
 		seedTestInvertLeft( 6666 );
 		seedTestInvertLeft( 7777 );
 		seedTestInvertLeft( 8888 );
-		seedTestInvertLeft( 9999 ); */
+		seedTestInvertLeft( 9999 );
 	}
 
 
@@ -147,9 +147,9 @@ public class TestMultivectorInvert extends TestCase {
 		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> shouldBeIdentB = inv.mult( mv );
 		
 		
-		// validateIsUnit( shouldBeIdentA );
+		validateIsUnit( shouldBeIdentA );
 		
-		// validateIsUnit( shouldBeIdentB );
+		validateIsUnit( shouldBeIdentB );
 		
 		
 	}
@@ -160,8 +160,8 @@ public class TestMultivectorInvert extends TestCase {
 	 */
 	public void testInvertRight() throws NotInvertibleException
 	{
-		seedTestInvertRight( 1111 );
-		/* seedTestInvertRight( 2222 );
+		/* seedTestInvertRight( 1111 );
+		seedTestInvertRight( 2222 );
 		seedTestInvertRight( 3333 );
 		seedTestInvertRight( 4444 );
 		seedTestInvertRight( 5555 );
@@ -219,7 +219,7 @@ public class TestMultivectorInvert extends TestCase {
 		
 		// validateIsUnit( shouldBeIdentA );
 		
-		// validateIsUnit( shouldBeIdentB );
+		validateIsUnit( shouldBeIdentB );
 		
 		
 	}
@@ -286,7 +286,7 @@ public class TestMultivectorInvert extends TestCase {
 		
 		
 		
-		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertRight();
+		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertLeft();
 		
 		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> shouldBeIdentA = mv.mult( inv );
 		
@@ -333,7 +333,7 @@ public class TestMultivectorInvert extends TestCase {
 		
 		
 		
-		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertRight();
+		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertLeft();
 		
 		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> shouldBeIdentA = mv.mult( inv );
 		
@@ -381,7 +381,7 @@ public class TestMultivectorInvert extends TestCase {
 		
 		
 		
-		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertRight();
+		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertLeft();
 		
 		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> shouldBeIdentA = mv.mult( inv );
 		
@@ -431,7 +431,7 @@ public class TestMultivectorInvert extends TestCase {
 		
 		
 		
-		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertRight();
+		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertLeft();
 		
 		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> shouldBeIdentA = mv.mult( inv );
 		
@@ -472,7 +472,7 @@ public class TestMultivectorInvert extends TestCase {
 		
 		
 		
-		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertRight();
+		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> inv = mv.invertLeft();
 		
 		final GeometricAlgebraMultivectorElem<TestDimensionFive,DoubleElem,DoubleElemFactory> shouldBeIdentA = mv.mult( inv );
 		
