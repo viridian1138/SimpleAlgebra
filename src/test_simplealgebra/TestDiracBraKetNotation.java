@@ -256,10 +256,10 @@ public class TestDiracBraKetNotation extends TestCase {
 		
 		
 				
-		Assert.assertEquals( 17.0 , 
+		Assert.assertEquals( 97.0 , 
 				result.getRe().getVal() , 1E-10 );
 				
-		Assert.assertEquals( -70.0 , 
+		Assert.assertEquals( 22.0 , 
 				result.getIm().getVal() , 1E-10 );
 		
 		
@@ -364,10 +364,10 @@ public class TestDiracBraKetNotation extends TestCase {
 			
 			
 					
-			Assert.assertEquals( 1.0 , 
+			Assert.assertEquals( 89.0 , 
 					result.getRe().getVal() , 1E-10 );
 					
-			Assert.assertEquals( -40.0 , 
+			Assert.assertEquals( 20.0 , 
 					result.getIm().getVal() , 1E-10 );
 			
 			

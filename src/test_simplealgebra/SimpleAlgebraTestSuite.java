@@ -44,6 +44,7 @@ public class SimpleAlgebraTestSuite extends TestSuite {
 		s.addTestSuite( TestDiracBraKetNotation.class );
 		s.addTestSuite( TestPhasorWithUncertainty.class );
 		s.addTestSuite( TestMultivectorInvert.class );
+		s.addTestSuite( TestQuaternionInvert.class );
 		return( s );
 	}
 	

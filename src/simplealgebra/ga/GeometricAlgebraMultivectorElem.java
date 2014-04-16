@@ -575,37 +575,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	}
 	
 	
-//	@Override
-//	public GeometricAlgebraMultivectorElem<U, R, S> invertLeft() throws NotInvertibleException {
-//		if( fac.isMultCommutative() )
-//		{
-//			final GeometricAlgebraMultivectorElem<U,R,S> r = reverseLeft();
-//			final GeometricAlgebraMultivectorElem<U,R,S> rr = this.mult( r );
-//			final R sqInv = ( rr.get( new HashSet<BigInteger>() ) ).invertLeft();
-//			
-//			final Mutator<R> mutr = new Mutator<R>()
-//			{
-//
-//				@Override
-//				public R mutate(R in) throws NotInvertibleException {
-//					return( in.mult( sqInv ) );
-//				}
-//
-//				@Override
-//				public String writeString() {
-//					return( "mmult" );
-//				}
-//				
-//			};
-//			
-//			return( r.mutate( mutr ) );
-//		}
-//		else
-//		{
-//			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//			return( null );
-//		}
-//	}
+
 	
 	
 	@Override
@@ -741,40 +711,6 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	
 	
 	
-//	@Override
-//	public GeometricAlgebraMultivectorElem<U, R, S> invertRight() throws NotInvertibleException {
-//		if( fac.isMultCommutative() )
-//		{
-//			final GeometricAlgebraMultivectorElem<U,R,S> r = reverseRight();
-//			final GeometricAlgebraMultivectorElem<U,R,S> rr = this.mult( r );
-//			final R sqInv = ( rr.get( new HashSet<BigInteger>() ) ).invertRight();
-//			
-//			final Mutator<R> mutr = new Mutator<R>()
-//			{
-//
-//				@Override
-//				public R mutate(R in) throws NotInvertibleException {
-//					return( in.mult( sqInv ) );
-//				}
-//
-//				@Override
-//				public String writeString() {
-//					return( "mmult" );
-//				}
-//						
-//			};
-//			
-//			final GeometricAlgebraMultivectorElem<U,R,S> ret = r.mutate( mutr );
-//					
-//			return( ret );
-//		}
-//		else
-//		{
-//			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//			return( null );
-//		}
-//	}
-//	
 
 	
 
@@ -905,7 +841,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			while( itb.hasNext() )
 			{
 				HashSet<BigInteger> kb = itb.next();
-				R vb = map.get( kb );
+				R vb = b.map.get( kb );
 				R vmul = va.mult( vb );
 				HashSet<BigInteger> el = new HashSet<BigInteger>();
 				final boolean negate = calcOrd( ka , kb , el );
@@ -945,7 +881,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 			while( itb.hasNext() )
 			{
 				HashSet<BigInteger> kb = itb.next();
-				R vb = map.get( kb );
+				R vb = b.map.get( kb );
 				R vmul = va.mult( vb );
 				HashSet<BigInteger> el = new HashSet<BigInteger>();
 				final boolean negate = calcOrd( ka , kb , el );
@@ -1179,7 +1115,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 	}
 	
 	
-	private R get( HashSet<BigInteger> el )
+	public R get( HashSet<BigInteger> el )
 	{
 		return( map.get( el ) );
 	}

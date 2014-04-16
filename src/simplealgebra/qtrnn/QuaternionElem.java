@@ -39,8 +39,16 @@ import simplealgebra.Mutator;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.NumDimensions;
 import simplealgebra.SquareMatrixElem;
+import simplealgebra.SquareMatrixElemFactory;
 import simplealgebra.et.EinsteinTensorElem;
 import simplealgebra.ga.GeometricAlgebraMultivectorElem;
+import simplealgebra.ga.GeometricAlgebraMultivectorElemFactory;
+import simplealgebra.symbolic.MultiplicativeDistributionRequiredException;
+import simplealgebra.symbolic.SymbolicAdd;
+import simplealgebra.symbolic.SymbolicElem;
+import simplealgebra.symbolic.SymbolicElemFactory;
+import simplealgebra.symbolic.SymbolicMult;
+import simplealgebra.symbolic.SymbolicNegate;
 
 public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> 
 	extends MutableElem<R, QuaternionElem<U,R,S>, QuaternionElemFactory<U,R,S>>  {
@@ -97,7 +105,7 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 			while( itb.hasNext() )
 			{
 				HashSet<BigInteger> kb = itb.next();
-				R vb = map.get( kb );
+				R vb = b.map.get( kb );
 				R vmul = va.mult( vb );
 				HashSet<BigInteger> el = new HashSet<BigInteger>();
 				final boolean negate = calcOrd( ka , kb , el );
@@ -242,18 +250,466 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 		}
 		return( ret );
 	}
+	
+	
+	private class AElem extends SymbolicElem<R, S>
+	{
+		private HashSet<BigInteger> indx;
+		private int col;
+
+		
+		public AElem(S _fac, HashSet<BigInteger> _indx, int _col) {
+			super(_fac);
+			indx = _indx;
+			col = _col;
+		}
+
+		@Override
+		public R eval() throws NotInvertibleException,
+				MultiplicativeDistributionRequiredException {
+			throw( new RuntimeException( "NotSupported" ) );
+		}
+
+		@Override
+		public R evalPartialDerivative(ArrayList<Elem<?, ?>> withRespectTo)
+				throws NotInvertibleException,
+				MultiplicativeDistributionRequiredException {
+			throw( new RuntimeException( "NotSupported" ) );
+		}
+
+		@Override
+		public String writeString() {
+			throw( new RuntimeException( "NotSupported" ) );
+		}
+		
+		/**
+		 * @return the indx
+		 */
+		public HashSet<BigInteger> getIndx() {
+			return indx;
+		}
+		
+		/**
+		 * @return the col
+		 */
+		public int getCol() {
+			return col;
+		}
+		
+	}
+	
+	
+	private class BElem extends SymbolicElem<R, S>
+	{
+		private HashSet<BigInteger> indx;
+		private int col;
+
+		
+		public BElem(S _fac, HashSet<BigInteger> _indx, int _col) {
+			super(_fac);
+			indx = _indx;
+			col = _col;
+		}
+
+		@Override
+		public R eval() throws NotInvertibleException,
+				MultiplicativeDistributionRequiredException {
+			throw( new RuntimeException( "NotSupported" ) );
+		}
+
+		@Override
+		public R evalPartialDerivative(ArrayList<Elem<?, ?>> withRespectTo)
+				throws NotInvertibleException,
+				MultiplicativeDistributionRequiredException {
+			throw( new RuntimeException( "NotSupported" ) );
+		}
+
+		@Override
+		public String writeString() {
+			throw( new RuntimeException( "NotSupported" ) );
+		}
+		
+		/**
+		 * @return the indx
+		 */
+		public HashSet<BigInteger> getIndx() {
+			return indx;
+		}
+		
+		/**
+		 * @return the col
+		 */
+		public int getCol() {
+			return col;
+		}
+		
+	}
+
+	
+	private void handleInvertElemLeft( SymbolicElem<R,S> in , 
+			BigInteger row , SquareMatrixElem<NumDimensions,R,S> out )
+	{
+		if( in instanceof SymbolicAdd )
+		{
+			SymbolicAdd<R,S> add = (SymbolicAdd<R,S>) in;
+			handleInvertElemLeft( add.getElemA() , row , out );
+			handleInvertElemLeft( add.getElemB() , row , out );
+			return;
+		}
+		
+		boolean negate = false;
+		
+		if( in instanceof SymbolicNegate )
+		{
+			SymbolicNegate<R,S> neg = (SymbolicNegate<R,S>) in;
+			negate = true;
+			in = neg.getElem();
+		}
+		
+		SymbolicMult<R,S> mul = (SymbolicMult<R,S>) in;
+		
+		AElem ae = (AElem)( mul.getElemA() );
+		BElem be = (BElem)( mul.getElemB() );
+		
+		R val = map.get( be.getIndx() );
+		
+		if( negate )
+		{
+			val = val.negate();
+		}
+		
+		
+		BigInteger col = BigInteger.valueOf( ae.getCol() );
+		
+		R vl = out.get( row , col );
+		
+		
+		if( vl != null )
+		{
+			out.setVal(row, col, vl.add(val) );
+		}
+		else
+		{
+			out.setVal(row, col, val);
+		}
+		
+	}
+	
+	
+	
+	private void handleInvertElemRight( SymbolicElem<R,S> in , 
+			BigInteger row , SquareMatrixElem<NumDimensions,R,S> out )
+	{
+		if( in instanceof SymbolicAdd )
+		{
+			SymbolicAdd<R,S> add = (SymbolicAdd<R,S>) in;
+			handleInvertElemRight( add.getElemA() , row , out );
+			handleInvertElemRight( add.getElemB() , row , out );
+			return;
+		}
+		
+		boolean negate = false;
+		
+		if( in instanceof SymbolicNegate )
+		{
+			SymbolicNegate<R,S> neg = (SymbolicNegate<R,S>) in;
+			negate = true;
+			in = neg.getElem();
+		}
+		
+		SymbolicMult<R,S> mul = (SymbolicMult<R,S>) in;
+		
+		AElem ae = (AElem)( mul.getElemA() );
+		BElem be = (BElem)( mul.getElemB() );
+		
+		R val = map.get( ae.getIndx() );
+		
+		if( negate )
+		{
+			val = val.negate();
+		}
+		
+		
+		BigInteger col = BigInteger.valueOf( be.getCol() );
+		
+		R vl = out.get( row , col );
+		
+		
+		if( vl != null )
+		{
+			out.setVal(row, col, vl.add(val) );
+		}
+		else
+		{
+			out.setVal(row, col, val);
+		}
+		
+	}
 
 	
 	@Override
 	public QuaternionElem<U, R, S> invertLeft() throws NotInvertibleException {
-		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
+		final SymbolicElemFactory<R, S> fc = new SymbolicElemFactory<R, S>( fac );
+		
+		final QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aA
+			= new QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>>( fc , dim );
+		
+		final QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aB
+			= new QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>>( fc , dim );
+		
+		final int inSz = map.keySet().size();
+		
+		
+		ArrayList<HashSet<BigInteger>> cols = new ArrayList<HashSet<BigInteger>>( inSz );
+		
+		
+		
+		int count = 0;
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			AElem ae = new AElem( fac , key , count );
+			BElem be = new BElem( fac , key , count );
+			aA.setVal(key, ae);
+			aB.setVal(key, be);
+			cols.add( key );
+			count++;
+		}
+		
+		
+		final QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aMult = aA.mult( aB );
+		
+		final int outSz = aMult.map.keySet().size();
+		
+		if( outSz != inSz )
+		{
+			throw( new RuntimeException( "Mismatch " + inSz + " " + outSz ) );
+		}
+		
+		final NumDimensions xdim = new NumDimensions()
+		{
+			public BigInteger getVal()
+			{
+				return( BigInteger.valueOf( outSz ) );
+			}
+		};
+		
+	
+		SquareMatrixElemFactory<NumDimensions,R,S> sqfac = new SquareMatrixElemFactory<NumDimensions,R,S>( fac , xdim );
+		
+		SquareMatrixElem<NumDimensions,R,S> sq = sqfac.zero();
+		
+		
+
+		int sindex = -1;
+		
+		
+		
+		count = 0;
+		Iterator<HashSet<BigInteger>> ita = aMult.map.keySet().iterator();
+		while( ita.hasNext() )
+		{
+			HashSet<BigInteger> id = ita.next();
+			handleInvertElemLeft( aMult.get( id ) , 
+					BigInteger.valueOf(count) , sq );
+			if( id.size() == 0 )
+			{
+				sindex = count;
+			}
+			count++;
+		}
+		
+		
+		SquareMatrixElem<NumDimensions,R,S> sqInv = sq.invertLeft();
+		
+		
+		GeometricAlgebraMultivectorElemFactory<NumDimensions, R, S> kfac = 
+				new GeometricAlgebraMultivectorElemFactory<NumDimensions, R, S>(fac, xdim);
+		
+		GeometricAlgebraMultivectorElem<NumDimensions, R, S> ki = kfac.zero();
+		GeometricAlgebraMultivectorElem<NumDimensions, R, S> ko = kfac.zero();
+		
+		if( sindex >= 0 )
+		{
+			HashSet<BigInteger> hv = new HashSet<BigInteger>();
+			hv.add( BigInteger.valueOf( sindex ) );
+			ki.setVal(hv, fac.identity() );
+		}
+		
+		ki.colVectorMultLeftDefault(sqInv, ko);
+		
+		
+		
+		
+//		SquareMatrixElem<NumDimensions,R,S> tst = sqInv.mult( sq );
+//		
+//		int xc;
+//		int yc;
+//		
+//		for( xc = 0 ; xc < outSz ; xc++ )
+//		{
+//			for( yc = 0 ; yc < outSz ; yc++ )
+//			{
+//				R vl = tst.getVal( BigInteger.valueOf( xc ) , BigInteger.valueOf( yc ) );
+//				System.out.println( "#### " + ( (DoubleElem) vl ).getVal() );
+//			}
+//		}
+		
+		
+		
+		QuaternionElem<U, R, S> ret = new QuaternionElem<U, R, S>(fac, dim);
+		
+		
+		for( count = 0 ; count < outSz ; count++ )
+		{
+			HashSet<BigInteger> mm = new HashSet<BigInteger>();
+			mm.add( BigInteger.valueOf( count ) );
+			R val = ko.get( mm );
+			if( val != null )
+			{
+				ret.setVal(cols.get(count), val);
+			}
+		}
+		
+		
+		return( ret );
+		
 	}
+	
 	
 	
 	
 	@Override
 	public QuaternionElem<U, R, S> invertRight() throws NotInvertibleException {
-		return( null ); // !!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
+		final SymbolicElemFactory<R, S> fc = new SymbolicElemFactory<R, S>( fac );
+		
+		final QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aA
+			= new QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>>( fc , dim );
+		
+		final QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aB
+			= new QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>>( fc , dim );
+		
+		final int inSz = map.keySet().size();
+		
+		
+		ArrayList<HashSet<BigInteger>> cols = new ArrayList<HashSet<BigInteger>>( inSz );
+		
+		
+		
+		int count = 0;
+		Iterator<HashSet<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			HashSet<BigInteger> key = it.next();
+			AElem ae = new AElem( fac , key , count );
+			BElem be = new BElem( fac , key , count );
+			aA.setVal(key, ae);
+			aB.setVal(key, be);
+			cols.add( key );
+			count++;
+		}
+		
+		
+		final QuaternionElem<U, SymbolicElem<R,S>, SymbolicElemFactory<R,S>> aMult = aA.mult( aB );
+		
+		final int outSz = aMult.map.keySet().size();
+		
+		if( outSz != inSz )
+		{
+			throw( new RuntimeException( "Mismatch " + inSz + " " + outSz ) );
+		}
+		
+		final NumDimensions xdim = new NumDimensions()
+		{
+			public BigInteger getVal()
+			{
+				return( BigInteger.valueOf( outSz ) );
+			}
+		};
+		
+	
+		SquareMatrixElemFactory<NumDimensions,R,S> sqfac = new SquareMatrixElemFactory<NumDimensions,R,S>( fac , xdim );
+		
+		SquareMatrixElem<NumDimensions,R,S> sq = sqfac.zero();
+		
+		
+
+		int sindex = -1;
+		
+		
+		
+		count = 0;
+		Iterator<HashSet<BigInteger>> ita = aMult.map.keySet().iterator();
+		while( ita.hasNext() )
+		{
+			HashSet<BigInteger> id = ita.next();
+			handleInvertElemRight( aMult.get( id ) , 
+					BigInteger.valueOf(count) , sq );
+			if( id.size() == 0 )
+			{
+				sindex = count;
+			}
+			count++;
+		}
+		
+		
+		SquareMatrixElem<NumDimensions,R,S> sqInv = sq.invertRight();
+		
+		
+		GeometricAlgebraMultivectorElemFactory<NumDimensions, R, S> kfac = 
+				new GeometricAlgebraMultivectorElemFactory<NumDimensions, R, S>(fac, xdim);
+		
+		GeometricAlgebraMultivectorElem<NumDimensions, R, S> ki = kfac.zero();
+		GeometricAlgebraMultivectorElem<NumDimensions, R, S> ko = kfac.zero();
+		
+		if( sindex >= 0 )
+		{
+			HashSet<BigInteger> hv = new HashSet<BigInteger>();
+			hv.add( BigInteger.valueOf( sindex ) );
+			ki.setVal(hv, fac.identity() );
+		}
+		
+		ki.colVectorMultRight(sqInv, ko);
+		
+		
+		
+		
+//		SquareMatrixElem<NumDimensions,R,S> tst = sqInv.mult( sq );
+//		
+//		int xc;
+//		int yc;
+//		
+//		for( xc = 0 ; xc < outSz ; xc++ )
+//		{
+//			for( yc = 0 ; yc < outSz ; yc++ )
+//			{
+//				R vl = tst.getVal( BigInteger.valueOf( xc ) , BigInteger.valueOf( yc ) );
+//				System.out.println( "#### " + ( (DoubleElem) vl ).getVal() );
+//			}
+//		}
+		
+		
+		
+		QuaternionElem<U, R, S> ret = new QuaternionElem<U, R, S>(fac, dim);
+		
+		
+		for( count = 0 ; count < outSz ; count++ )
+		{
+			HashSet<BigInteger> mm = new HashSet<BigInteger>();
+			mm.add( BigInteger.valueOf( count ) );
+			R val = ko.get( mm );
+			if( val != null )
+			{
+				ret.setVal(cols.get(count), val);
+			}
+		}
+		
+		
+		return( ret );
+		
 	}
 	
 
@@ -415,7 +871,7 @@ public class QuaternionElem<U extends NumDimensions, R extends Elem<R,?>, S exte
 	}
 	
 	
-	private R get( HashSet<BigInteger> el )
+	public R get( HashSet<BigInteger> el )
 	{
 		return( map.get( el ) );
 	}
