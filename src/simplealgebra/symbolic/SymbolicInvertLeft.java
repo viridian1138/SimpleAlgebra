@@ -56,8 +56,16 @@ public class SymbolicInvertLeft<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 
 	@Override
 	public String writeString( ) {
-		return( "invert( " + ( elem.writeString() ) + " )" );
+		return( "invertLeft( " + ( elem.writeString() ) + " )" );
 	}
+	
+	/**
+	 * @return the elem
+	 */
+	public SymbolicElem<R, S> getElem() {
+		return elem;
+	}
+	
 	
 	private SymbolicElem<R,S> elem;
 

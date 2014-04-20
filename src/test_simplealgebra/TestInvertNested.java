@@ -246,12 +246,19 @@ public class TestInvertNested extends TestCase {
 						// Comment asserts for now.
 						
 						//Assert.assertEquals( matchVal , 
-						//		shouldBeIdentA.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j), se ).
-						//		getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2), dl ).getVal() , 1E-7 );
+						//		shouldBeIdentA.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j)  ).
+						//		getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2)  ).getVal() , 1E-7 );
 						
-						//Assert.assertEquals( matchVal , 
-						//		shouldBeIdentB.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j), se ).
-						//		getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2), dl ).getVal() , 1E-7 );
+						try
+						{
+						Assert.assertEquals( matchVal , 
+								shouldBeIdentB.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j)  ).
+								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2)  ).getVal() , 1E-7 );
+						}
+						catch( Throwable ex )
+						{
+							ex.printStackTrace( System.out );
+						}
 						
 					}
 				}

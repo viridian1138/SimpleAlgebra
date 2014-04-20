@@ -181,6 +181,81 @@ public class TestInvertSimple extends TestCase {
 		}
 		
 	}
+	
+	
+	
+	
+	
+	/**
+	 * Test method for {@link simplealgebra.SquareMatrixElem#invertRight()}.
+	 */
+	public void testInvertSimilarity() throws NotInvertibleException
+	{
+		seedTestInvertSimilarity( 1111 );
+		seedTestInvertSimilarity( 2222 );
+		seedTestInvertSimilarity( 3333 );
+		seedTestInvertSimilarity( 4444 );
+		seedTestInvertSimilarity( 5555 );
+		seedTestInvertSimilarity( 6666 );
+		seedTestInvertSimilarity( 7777 );
+		seedTestInvertSimilarity( 8888 );
+		seedTestInvertSimilarity( 9999 );
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Test method for {@link simplealgebra.SquareMatrixElem#invertRight()}.
+	 */
+	private void seedTestInvertSimilarity( long seed ) throws NotInvertibleException {
+		
+		final Random rand = new Random();
+		
+		rand.setSeed( seed );
+		
+		final TestDimensionFour td = new TestDimensionFour();
+		
+		final DoubleElemFactory dl = new DoubleElemFactory();
+		
+		final SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory> se = 
+				new SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>(dl, td);
+		
+		final SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory> mat = se.zero();
+		
+		int i;
+		int j;
+		
+		for( i = 0 ; i < 4 ; i++ )
+		{
+			for( j = 0 ; j < 4 ; j++ )
+			{
+				DoubleElem val = new DoubleElem( 2.0 * ( rand.nextDouble() ) - 1.0 );
+				mat.setVal( BigInteger.valueOf(i) , BigInteger.valueOf(j) , val );
+			}
+		}
+		
+		final SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory> invR = mat.invertRight();
+		
+		final SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory> invL = mat.invertLeft();
+		
+		
+		
+		for( i = 0 ; i < 4 ; i++ )
+		{
+			for( j = 0 ; j < 4 ; j++ )
+			{
+				final double matchVal = invL.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j) ).getVal();
+				
+				Assert.assertEquals( matchVal , 
+						invR.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j) ).getVal() , 1E-10 );
+				
+			}
+		}
+		
+	}
+	
 
 	
 }

@@ -714,6 +714,49 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 		}
 	}
 	
+	@Override
+	public void validate() throws RuntimeException
+	{
+		Iterator<BigInteger> itr = rowMap.keySet().iterator();
+		while( itr.hasNext() )
+		{
+			BigInteger row = itr.next();
+			HashMap<BigInteger,R> atRow = rowMap.get( row );
+			Iterator<BigInteger> it = atRow.keySet().iterator();
+			while( it.hasNext() )
+			{
+				final BigInteger column = it.next();
+				final R val = atRow.get( column );
+				final R val2 = columnMap.get( column ).get( row );
+				if( val != val2 )
+				{
+					throw( new RuntimeException( "Mismatch" ) );
+				}
+				val.validate();
+			}
+		}
+		
+		itr = columnMap.keySet().iterator();
+		while( itr.hasNext() )
+		{
+			BigInteger column = itr.next();
+			HashMap<BigInteger,R> atColumn = columnMap.get( column );
+			Iterator<BigInteger> it = atColumn.keySet().iterator();
+			while( it.hasNext() )
+			{
+				final BigInteger row = it.next();
+				final R val = atColumn.get( row );
+				final R val2 = rowMap.get( row ).get( column );
+				if( val != val2 )
+				{
+					throw( new RuntimeException( "Mismatch" ) );
+				}
+				val.validate();
+			}
+		}
+		
+	}
+	
 	
 	@Override
 	public SquareMatrixElem<U, R, S> handleOptionalOp( Object id , ArrayList<SquareMatrixElem<U, R, S>> args )  throws NotInvertibleException
