@@ -150,7 +150,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 			if( b != null ) sel.setVal(BigInteger.ZERO, BigInteger.ONE, b);
 			if( a != null ) sel.setVal(BigInteger.ONE, BigInteger.ONE, a);
 			
-			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invertRight();
+			final SquareMatrixElem<NumDimensions,R,S> seli = sel.handleOptionalOp(SquareMatrixElem.SquareMatrixCmd.INVERT_LEFT_REV_COEFF, null);
 			final GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S> gfac =
 					new GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
 			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvc =
@@ -246,7 +246,7 @@ public class ComplexElem<R extends Elem<R,?>, S extends ElemFactory<R,S>>
 			if( b != null ) sel.setVal(BigInteger.ZERO, BigInteger.ONE, b);
 			if( a != null ) sel.setVal(BigInteger.ONE, BigInteger.ONE, a);
 			
-			final SquareMatrixElem<NumDimensions,R,S> seli = sel.invertRight();
+			final SquareMatrixElem<NumDimensions,R,S> seli = sel.handleOptionalOp(SquareMatrixElem.SquareMatrixCmd.INVERT_LEFT_REV_COEFF, null);
 			final GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S> gfac =
 					new GeometricAlgebraMultivectorElemFactory<NumDimensions,R,S>( this.getFac().getFac() , nd );
 			final GeometricAlgebraMultivectorElem<NumDimensions,R,S> gvc =

@@ -63,6 +63,54 @@ public class SymbolicNegate<R extends Elem<R,?>, S extends ElemFactory<R,S>> ext
 	public SymbolicElem<R, S> getElem() {
 		return elem;
 	}
+	
+	
+	@Override
+	public SymbolicElem<R, S> handleOptionalOp( Object id , ArrayList<SymbolicElem<R, S>> args ) throws NotInvertibleException
+	{
+		if( id instanceof SymbolicOps )
+		{
+			switch( (SymbolicOps) id )
+			{
+				case DISTRIBUTE_SIMPLIFY:
+				{
+					SymbolicNegate<R,S> ths = this;
+					SymbolicElem<R,S> r = elem.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null);
+					if( elem != r )
+					{
+						ths = new SymbolicNegate<R,S>( r , fac );
+					}
+					
+					if( ths.elem instanceof SymbolicZero )
+					{
+						return( ths.elem );
+					}
+					
+					if( ths.elem instanceof SymbolicNegate )
+					{
+						return( ((SymbolicNegate<R,S>) ths.elem).getElem() );
+					}
+					
+					return( ths );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
+	}
+	
+	
+	@Override
+	public boolean symbolicEquals( SymbolicElem<R, S> b )
+	{
+		if( b instanceof SymbolicNegate )
+		{
+			return( elem.symbolicEquals( ((SymbolicNegate<R,S>) b).getElem() ) );
+		}
+		
+		return( false );
+	}
 
 
 	private SymbolicElem<R,S> elem;

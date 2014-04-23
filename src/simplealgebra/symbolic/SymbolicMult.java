@@ -170,6 +170,145 @@ public class SymbolicMult<R extends Elem<R,?>, S extends ElemFactory<R,S>> exten
 	public SymbolicElem<R, S> getElemB() {
 		return elemB;
 	}
+	
+	@Override
+	public SymbolicElem<R, S> handleOptionalOp( Object id , ArrayList<SymbolicElem<R, S>> args ) throws NotInvertibleException
+	{
+		if( id instanceof SymbolicOps )
+		{
+			switch( (SymbolicOps) id )
+			{
+				case DISTRIBUTE_SIMPLIFY:
+				{
+					SymbolicMult<R,S> ths = this;
+					SymbolicElem<R,S> ra = elemA.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null);
+					SymbolicElem<R,S> rb = elemB.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null);
+					if( ( elemA != ra ) || ( elemB != rb ) )
+					{
+						ths = new SymbolicMult<R,S>( ra , rb , fac );
+					}
+					
+					if( ths.elemA instanceof SymbolicZero )
+					{
+						return( ths.elemA );
+					}
+					
+					if( ths.elemB instanceof SymbolicZero )
+					{
+						return( ths.elemB );
+					}
+					
+					if( ths.elemA instanceof SymbolicIdentity )
+					{
+						return( ths.elemB );
+					}
+					
+					if( ths.elemB instanceof SymbolicIdentity )
+					{
+						return( ths.elemA );
+					}
+					
+					if( ths.elemA instanceof SymbolicNegate )
+					{
+						final SymbolicMult<R,S> am = 
+								new SymbolicMult<R,S>( ( (SymbolicNegate<R,S>)(ths.elemA) ).getElem() , ths.elemB , fac );
+						return( ( new SymbolicNegate<R,S>( am , fac ) ).handleOptionalOp(SymbolicOps.DISTRIBUTE_SIMPLIFY, args) );
+					}
+					
+					if( this.elemB instanceof SymbolicNegate )
+					{
+						final SymbolicMult<R,S> am = 
+								new SymbolicMult<R,S>( ths.elemA , ( (SymbolicNegate<R,S>)(ths.elemB) ).getElem() , fac );
+						return( ( new SymbolicNegate<R,S>( am , fac ) ).handleOptionalOp(SymbolicOps.DISTRIBUTE_SIMPLIFY, args) );
+					}
+					
+					if( ths.elemA instanceof SymbolicAdd )
+					{
+						// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					}
+					
+					if( ths.elemB instanceof SymbolicAdd )
+					{
+						// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					}
+					
+					if( ths.elemA instanceof SymbolicInvertLeft )
+					{
+						SymbolicElem<R,S> aa = ((SymbolicInvertLeft<R,S>) ths.elemA).getElem();
+						if( aa.symbolicEquals( ths.elemB ) )
+						{
+							return( this.getFac().identity() );
+						}
+					}
+					
+					if( ths.elemB instanceof SymbolicInvertRight )
+					{
+						SymbolicElem<R,S> bb = ((SymbolicInvertRight<R,S>) ths.elemB).getElem();
+						if( ths.elemA.symbolicEquals( bb ) )
+						{
+							return( this.getFac().identity() );
+						}
+					}
+					
+					
+					if( this.getFac().isMultCommutative() )
+					{
+						if( ths.elemA instanceof SymbolicInvertRight )
+						{
+							SymbolicElem<R,S> aa = ((SymbolicInvertRight<R,S>) ths.elemA).getElem();
+							if( aa.symbolicEquals( ths.elemB ) )
+							{
+								return( this.getFac().identity() );
+							}
+						}
+						
+						if( ths.elemB instanceof SymbolicInvertLeft )
+						{
+							SymbolicElem<R,S> bb = ((SymbolicInvertLeft<R,S>) ths.elemB).getElem();
+							if( ths.elemA.symbolicEquals( bb ) )
+							{
+								return( this.getFac().identity() );
+							}
+						}
+					}
+					
+					return( ths );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
+	}
+	
+	@Override
+	public boolean symbolicEquals( SymbolicElem<R, S> b )
+	{
+		if( b instanceof SymbolicMult )
+		{
+			if( this.getFac().isMultCommutative() )
+			{
+				boolean aa = this.getElemA().symbolicEquals( ((SymbolicMult<R,S>) b).getElemA() );
+				boolean bb = this.getElemB().symbolicEquals( ((SymbolicMult<R,S>) b).getElemB() );
+				if( aa && bb )
+				{
+					return( true );
+				}
+				
+				aa = this.getElemA().symbolicEquals( ((SymbolicMult<R,S>) b).getElemB() );
+				bb = this.getElemB().symbolicEquals( ((SymbolicMult<R,S>) b).getElemA() );
+				return( aa && bb );
+			}
+			else
+			{
+				boolean aa = this.getElemA().symbolicEquals( ((SymbolicMult<R,S>) b).getElemA() );
+				boolean bb = this.getElemB().symbolicEquals( ((SymbolicMult<R,S>) b).getElemB() );
+				return( aa && bb );
+			}
+		}
+		
+		return( false );
+	}
 
 	private SymbolicElem<R,S> elemA;
 	private SymbolicElem<R,S> elemB;

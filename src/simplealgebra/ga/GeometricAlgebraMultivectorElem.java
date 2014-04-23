@@ -653,7 +653,7 @@ public class GeometricAlgebraMultivectorElem<U extends NumDimensions, R extends 
 		}
 		
 		
-		SquareMatrixElem<NumDimensions,R,S> sqInv = sq.invertRight();
+		SquareMatrixElem<NumDimensions,R,S> sqInv = sq.handleOptionalOp( SquareMatrixElem.SquareMatrixCmd.INVERT_LEFT_REV_COEFF , null);
 		
 		
 		GeometricAlgebraMultivectorElemFactory<NumDimensions, R, S> kfac = 

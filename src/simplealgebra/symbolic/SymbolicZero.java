@@ -69,6 +69,11 @@ public class SymbolicZero<R extends Elem<R,?>, S extends ElemFactory<R,S>> exten
 	{
 		throw( new NotInvertibleException() );
 	}
+	
+	public boolean symbolicEquals( SymbolicElem<R, S> b )
+	{
+		return( b instanceof SymbolicZero );
+	}
 
 }
 

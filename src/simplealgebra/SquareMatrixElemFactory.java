@@ -66,6 +66,25 @@ public class SquareMatrixElemFactory<U extends NumDimensions, R extends Elem<R,?
 		{
 			switch( (SquareMatrixElem.SquareMatrixCmd) id )
 			{
+			
+				case INVERT_LEFT_REV_COEFF:
+				{
+					SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> arg
+						= args.get( 0 );
+					return( new SymbolicInvertLeftRevCoeff<U,R,S>( arg , arg.getFac().getFac() ) );
+				}
+				// break;
+			
+				case MULT_REV_COEFF:
+				{
+					SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> argA
+						= args.get( 0 );
+					SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> argB
+						= args.get( 1 );
+					return( new SymbolicMultRevCoeff<U,R,S>( argA , argB , argA.getFac().getFac() ) );
+				}
+				// break;
+				
 				case TRANSPOSE:
 				{
 					SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> arg

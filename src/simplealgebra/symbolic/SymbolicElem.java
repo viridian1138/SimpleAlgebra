@@ -28,6 +28,8 @@ package simplealgebra.symbolic;
 
 import java.util.ArrayList;
 
+import simplealgebra.AbsoluteValue;
+import simplealgebra.DoubleElem;
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
@@ -85,7 +87,31 @@ public abstract class SymbolicElem<R extends Elem<R,?>, S extends ElemFactory<R,
 	@Override
 	public SymbolicElem<R, S> handleOptionalOp( Object id , ArrayList<SymbolicElem<R, S>> args ) throws NotInvertibleException
 	{
+		if( id instanceof SymbolicOps )
+		{
+			switch( (SymbolicOps) id )
+			{
+				case DISTRIBUTE_SIMPLIFY:
+				{
+					return( this );
+				}
+				// break;
+			}
+		}
+		
 		return( getFac().getFac().handleSymbolicOptionalOp(id, args) );
+	}
+	
+	
+	public boolean symbolicEquals( SymbolicElem<R, S> b )
+	{
+		throw( new RuntimeException( "Not Supported " + this ) );
+	}
+	
+	
+	protected SymbolicElem<R,S> distSimp( ) throws NotInvertibleException
+	{
+		return( this.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null) );
 	}
 	
 	

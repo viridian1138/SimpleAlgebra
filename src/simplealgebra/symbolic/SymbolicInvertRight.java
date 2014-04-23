@@ -67,6 +67,49 @@ public class SymbolicInvertRight<R extends Elem<R,?>, S extends ElemFactory<R,S>
 	}
 	
 	
+	@Override
+	public SymbolicElem<R, S> handleOptionalOp( Object id , ArrayList<SymbolicElem<R, S>> args ) throws NotInvertibleException
+	{
+		if( id instanceof SymbolicOps )
+		{
+			switch( (SymbolicOps) id )
+			{
+				case DISTRIBUTE_SIMPLIFY:
+				{
+					SymbolicInvertRight<R,S> ths = this;
+					SymbolicElem<R,S> r = elem.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null);
+					if( elem != r )
+					{
+						ths = new SymbolicInvertRight<R,S>( r , fac );
+					}
+					
+					if( ths.elem instanceof SymbolicNegate )
+					{
+						// !!!!!!!!
+					}
+					
+					return( ths );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
+	}
+	
+	
+	@Override
+	public boolean symbolicEquals( SymbolicElem<R, S> b )
+	{
+		if( b instanceof SymbolicInvertRight )
+		{
+			return( elem.symbolicEquals( ((SymbolicInvertRight<R,S>) b).getElem() ) );
+		}
+		
+		return( false );
+	}
+	
+	
 	private SymbolicElem<R,S> elem;
 
 }

@@ -2,7 +2,6 @@
 
 
 
-
 //$$strtCprt
 /**
 * Simple Algebra 
@@ -23,63 +22,55 @@
 
 
 
-
-package simplealgebra.symbolic;
+package simplealgebra;
 
 import java.util.ArrayList;
 
-import simplealgebra.AbsoluteValue;
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
+import simplealgebra.symbolic.*;
 
-public class SymbolicAbsoluteValue<R extends Elem<R,?>, S extends ElemFactory<R,S>> extends SymbolicElem<R,S> 
+
+public class SymbolicInvertLeftRevCoeff<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends 
+	SymbolicElem<SquareMatrixElem<U,R,S>,SquareMatrixElemFactory<U,R,S>> 
 {
 
-	public SymbolicAbsoluteValue( SymbolicElem<R,S> _elem , S _fac )
+	public SymbolicInvertLeftRevCoeff( SymbolicElem<SquareMatrixElem<U,R,S>,SquareMatrixElemFactory<U,R,S>> _elem , 
+			SquareMatrixElemFactory<U, R, S> _fac )
 	{
 		super( _fac );
 		elem = _elem;
 	}
 	
 	@Override
-	public R eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
-		ArrayList<R> args = new ArrayList<R>();
-		return( elem.eval().handleOptionalOp( AbsoluteValue.ABSOLUTE_VALUE , args ) );
+	public SquareMatrixElem<U, R, S> eval( ) throws NotInvertibleException, MultiplicativeDistributionRequiredException {
+		ArrayList<SquareMatrixElem<U, R, S>> args = new ArrayList<SquareMatrixElem<U, R, S>>();
+		return( elem.eval().handleOptionalOp( SquareMatrixElem.SquareMatrixCmd.INVERT_LEFT_REV_COEFF , args) );
 	}
 	
 	@Override
-	public R evalPartialDerivative( ArrayList<Elem<?,?>> withRespectTo ) throws NotInvertibleException, MultiplicativeDistributionRequiredException
-	{
+	public SquareMatrixElem<U, R, S> evalPartialDerivative(ArrayList<Elem<?, ?>> withRespectTo)
+			throws NotInvertibleException, MultiplicativeDistributionRequiredException {
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		return null;
 	}
 
 	@Override
 	public String writeString( ) {
-		return( "abs( " + ( elem.writeString() ) + " )" );
+		return( "invertLeftRevCoeff( " + ( elem.writeString() ) + " )" );
 	}
 	
+	
 	/**
-	 * @return the elem
+	 * @return the elemA
 	 */
-	public SymbolicElem<R, S> getElem() {
+	public SymbolicElem<SquareMatrixElem<U,R,S>,SquareMatrixElemFactory<U,R,S>> getElem() {
 		return elem;
 	}
 	
-	@Override
-	public boolean symbolicEquals( SymbolicElem<R, S> b )
-	{
-		if( b instanceof SymbolicAbsoluteValue )
-		{
-			return( elem.symbolicEquals( ((SymbolicAbsoluteValue<R,S>) b).getElem() ) );
-		}
-		
-		return( false );
-	}
 
-
-	private SymbolicElem<R,S> elem;
+	private SymbolicElem<SquareMatrixElem<U,R,S>,SquareMatrixElemFactory<U,R,S>> elem;
 
 }
 

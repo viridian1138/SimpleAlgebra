@@ -70,6 +70,74 @@ public class SymbolicAdd<R extends Elem<R,?>, S extends ElemFactory<R,S>> extend
 	public SymbolicElem<R, S> getElemB() {
 		return elemB;
 	}
+	
+	
+	@Override
+	public SymbolicElem<R, S> handleOptionalOp( Object id , ArrayList<SymbolicElem<R, S>> args ) throws NotInvertibleException
+	{
+		if( id instanceof SymbolicOps )
+		{
+			switch( (SymbolicOps) id )
+			{
+				case DISTRIBUTE_SIMPLIFY:
+				{
+					SymbolicAdd<R,S> ths = this;
+					SymbolicElem<R,S> ra = elemA.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null);
+					SymbolicElem<R,S> rb = elemB.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null);
+					if( ( elemA != ra ) || ( elemB != rb ) )
+					{
+						ths = new SymbolicAdd<R,S>( ra , rb , fac );
+					}
+					
+					if( ths.elemA instanceof SymbolicZero )
+					{
+						return( ths.elemB );
+					}
+					
+					if( ths.elemB instanceof SymbolicZero )
+					{
+						return( ths.elemA );
+					}
+					
+					{
+						SymbolicElem<R,S> elA = ( new SymbolicNegate<R,S>( ths.elemA , fac ) ).handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null);
+						
+						if( elA.symbolicEquals( ths.elemB ) )
+						{
+							return( this.getFac().zero() );
+						}
+					}
+					
+					return( ths );
+				}
+				// break;
+			}
+		}
+		
+		return( super.handleOptionalOp(id, args) );
+	}
+	
+	
+	@Override
+	public boolean symbolicEquals( SymbolicElem<R, S> b )
+	{
+		if( b instanceof SymbolicAdd )
+		{
+			boolean aa = this.getElemA().symbolicEquals( ((SymbolicAdd<R,S>) b).getElemA() );
+			boolean bb = this.getElemB().symbolicEquals( ((SymbolicAdd<R,S>) b).getElemB() );
+			if( aa && bb )
+			{
+				return( true );
+			}
+				
+			aa = this.getElemA().symbolicEquals( ((SymbolicAdd<R,S>) b).getElemB() );
+			bb = this.getElemB().symbolicEquals( ((SymbolicAdd<R,S>) b).getElemA() );
+			return( aa && bb );
+		}
+		
+		return( false );
+	}
+	
 
 	private SymbolicElem<R,S> elemA;
 	private SymbolicElem<R,S> elemB;
