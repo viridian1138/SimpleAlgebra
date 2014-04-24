@@ -40,6 +40,7 @@ public class SimpleAlgebraTestSuite extends TestSuite {
 		final TestSuite s = new TestSuite();
 		s.addTestSuite( TestInvertSimple.class );
 		s.addTestSuite( TestInvertNestedLeft.class );
+		s.addTestSuite( TestInvertNestedRight.class );
 		s.addTestSuite( TestPhasorExample.class );
 		s.addTestSuite( TestDiracBraKetNotation.class );
 		s.addTestSuite( TestPhasorWithUncertainty.class );

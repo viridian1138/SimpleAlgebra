@@ -243,8 +243,8 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	
 	@Override
 	public SquareMatrixElem<U, R, S> invertRight() throws NotInvertibleException {
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		throw( new RuntimeException( "Fail" ) );
+		SquareMatrixElem<U,R,S> copy = icopy();
+		return( copy.iinvertRight() );
 	}
 	
 	
@@ -260,6 +260,78 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 		SquareMatrixElem<U,R,S> copy = icopy();
 		return( copy.iinvertLeftRevCoeff() );
 	}
+	
+	
+	
+	private SquareMatrixElem<U, R, S> iinvertRight() throws NotInvertibleException
+	{
+		SquareMatrixElem<U,R,S> ret = getFac().identity();
+		
+		final BigInteger max = dim.getVal();
+		BigInteger cnt = BigInteger.ZERO;
+		while( cnt.compareTo( max ) < 0 )
+		{
+			final R mv = setUpColumnRight( cnt , ret );
+			
+			multiplyThroughColumnRight( cnt , mv );
+			ret.multiplyThroughColumnRight( cnt , mv);
+			
+//			if( mv instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			{
+//				SymbolicMult ae = (SymbolicMult)( this.getVal(cnt, cnt) );
+//				SymbolicInvertRight sr = (SymbolicInvertRight)( ae.getElemA() );
+//				if( sl.getElem() == ae.getElemB() )
+//				{
+//					this.setVal(cnt, cnt, (R)( new SymbolicIdentity( sl.getFac().getFac() ) ) );
+//				}
+//				else
+//				{
+//					throw( new RuntimeException( "Fail." ) );
+//				}
+//			}
+			
+			BigInteger srcCol = cnt;
+			BigInteger destCol = BigInteger.ZERO;
+			while( destCol.compareTo( max ) < 0 )
+			{
+				if( destCol.compareTo(srcCol) != 0 )
+				{
+					R mult = this.getVal(srcCol, destCol);
+					columnSubtractRight( srcCol , destCol , mult );
+					ret.columnSubtractRight(srcCol, destCol, mult);
+					
+//					if( mult instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!
+//					{
+//						SymbolicAdd el = (SymbolicAdd)( this.getVal(srcCol, destCol) );
+//						SymbolicElem elA = el.getElemA();
+//						SymbolicNegate elB = (SymbolicNegate)( el.getElemB() );
+//						SymbolicMult elbm = (SymbolicMult)( elB.getElem() );
+//						if( ! ( elbm.getElemB() instanceof SymbolicIdentity ) )
+//						{
+//							throw( new RuntimeException( "Fail." ) );
+//						}
+//						
+//						if( elbm.getElemA() == elA )
+//						{
+//							this.setVal(srcCol, destCol, (R)( new SymbolicZero( el.getFac().getFac() ) ) );
+//						}
+//						else
+//						{
+//							throw( new RuntimeException( "Fail." ) );
+//						}
+//					}
+					
+				}
+				
+				destCol = destCol.add( BigInteger.ONE );
+			}
+			
+			cnt = cnt.add( BigInteger.ONE );
+		}
+		
+		return( ret );
+	}
+	
 	
 	
 	private SquareMatrixElem<U, R, S> iinvertLeft() throws NotInvertibleException
@@ -402,6 +474,33 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
+	private void columnSubtractLeft( BigInteger srcCol , BigInteger destCol , R mult )
+	{
+		HashMap<BigInteger,R> subMapSrc = columnMap.get( srcCol );
+		HashMap<BigInteger,R> subMapDest = columnMap.get( destCol );
+		if( subMapSrc != null )
+		{
+			Iterator<BigInteger> it = subMapSrc.keySet().iterator();
+			while( it.hasNext() )
+			{
+				BigInteger row = it.next();
+				R srcVal = subMapSrc.get( row );
+				R srcMultNegated = mult.mult( srcVal ).negate();
+				// !! R srcMultNegated = srcVal.mult( mult ).negate();
+				R dstVal = subMapDest.get( row );
+				if( dstVal != null )
+				{
+					this.setVal(row, destCol, dstVal.add(srcMultNegated));
+				}
+				else
+				{
+					this.setVal(row, destCol, srcMultNegated);
+				}
+			}
+		}
+	}
+	
+	
 	private void rowSubtractLeft( BigInteger srcRow , BigInteger destRow , R mult )
 	{
 		HashMap<BigInteger,R> subMapSrc = rowMap.get( srcRow );
@@ -423,6 +522,34 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				else
 				{
 					this.setVal(destRow, col, srcMultNegated);
+				}
+			}
+		}
+	}
+	
+	
+	
+	private void columnSubtractRight( BigInteger srcCol , BigInteger destCol , R mult )
+	{
+		HashMap<BigInteger,R> subMapSrc = columnMap.get( srcCol );
+		HashMap<BigInteger,R> subMapDest = columnMap.get( destCol );
+		if( subMapSrc != null )
+		{
+			Iterator<BigInteger> it = subMapSrc.keySet().iterator();
+			while( it.hasNext() )
+			{
+				BigInteger row = it.next();
+				R srcVal = subMapSrc.get( row );
+				R srcMultNegated = srcVal.mult( mult ).negate();
+				// !! R srcMultNegated = mult.mult( srcVal ).negate();
+				R dstVal = subMapDest.get( row );
+				if( dstVal != null )
+				{
+					this.setVal(row, destCol, dstVal.add(srcMultNegated));
+				}
+				else
+				{
+					this.setVal(row, destCol, srcMultNegated);
 				}
 			}
 		}
@@ -457,6 +584,26 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
+	private void multiplyThroughColumnLeft( BigInteger col , R mv )
+	{
+		HashMap<BigInteger,R> subMap = columnMap.get( col );
+		if( subMap != null )
+		{
+			Iterator<BigInteger> it = subMap.keySet().iterator();
+			while( it.hasNext() )
+			{
+				BigInteger row = it.next();
+				R val = subMap.get( row );
+				if( val != null )
+				{
+					R pval = mv.mult( val );
+					this.setVal(row, col, pval);
+				}
+			}
+		}
+	}
+	
+	
 	private void multiplyThroughRowLeft( BigInteger row , R mv )
 	{
 		HashMap<BigInteger,R> subMap = rowMap.get( row );
@@ -470,6 +617,26 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				if( val != null )
 				{
 					R pval = mv.mult( val );
+					this.setVal(row, col, pval);
+				}
+			}
+		}
+	}
+	
+	
+	private void multiplyThroughColumnRight( BigInteger col , R mv )
+	{
+		HashMap<BigInteger,R> subMap = columnMap.get( col );
+		if( subMap != null )
+		{
+			Iterator<BigInteger> it = subMap.keySet().iterator();
+			while( it.hasNext() )
+			{
+				BigInteger row = it.next();
+				R val = subMap.get( row );
+				if( val != null )
+				{
+					R pval = val.mult( mv );
 					this.setVal(row, col, pval);
 				}
 			}
@@ -497,6 +664,36 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
+	private R setUpColumnLeft( final BigInteger coli , final SquareMatrixElem<U,R,S> ret ) throws NotInvertibleException
+	{
+		try
+		{
+			R tp = this.get(coli, coli).invertLeft();
+			return( tp );
+		}
+		catch( NotInvertibleException ex )
+		{
+			final BigInteger max = dim.getVal();
+			BigInteger cnt = coli.add( BigInteger.ONE );
+			while( cnt.compareTo( max ) < 0 )
+			{
+				try
+				{
+					R tp = this.get(cnt, coli).invertLeft();
+					exchangeColumns( coli , cnt );
+					ret.exchangeColumns( coli , cnt );
+					return( tp );
+				}
+				catch( NotInvertibleException ex2 )
+				{
+					cnt = cnt.add( BigInteger.ONE );
+				}
+			}
+			throw( new NotInvertibleException() );
+		}
+	}
+	
+	
 	private R setUpRowLeft( final BigInteger rowi , final SquareMatrixElem<U,R,S> ret ) throws NotInvertibleException
 	{
 		try
@@ -515,6 +712,37 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 					R tp = this.get(cnt, rowi).invertLeft();
 					exchangeRows( rowi , cnt );
 					ret.exchangeRows( rowi , cnt );
+					return( tp );
+				}
+				catch( NotInvertibleException ex2 )
+				{
+					cnt = cnt.add( BigInteger.ONE );
+				}
+			}
+			throw( new NotInvertibleException() );
+		}
+	}
+	
+	private R setUpColumnRight( final BigInteger coli , final SquareMatrixElem<U,R,S> ret ) throws NotInvertibleException
+	{
+		try
+		{
+			// R tp = this.get(coli, coli).invertRight(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			R tp = this.get(coli, coli).invertLeft(); // !!!!!!!!!!!!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!
+			return( tp );
+		}
+		catch( NotInvertibleException ex )
+		{
+			final BigInteger max = dim.getVal();
+			BigInteger cnt = coli.add( BigInteger.ONE );
+			while( cnt.compareTo( max ) < 0 )
+			{
+				try
+				{
+					// R tp = this.get(cnt, coli).invertRight(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					R tp = this.get(cnt, coli).invertLeft(); // !!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					exchangeColumns( coli , cnt );
+					ret.exchangeColumns( coli , cnt );
 					return( tp );
 				}
 				catch( NotInvertibleException ex2 )
@@ -559,6 +787,22 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
+	private void exchangeColumns( final BigInteger cola , final BigInteger colb )
+	{
+		HashMap<BigInteger,R> subA = columnMap.get( cola );
+		HashMap<BigInteger,R> subB = columnMap.get( colb );
+		
+		HashMap<BigInteger,R> subAA = (HashMap<BigInteger, R>) (subA != null ? subA.clone() : null);
+		HashMap<BigInteger,R> subBB = (HashMap<BigInteger, R>) (subB != null ? subB.clone() : null);
+		
+		eraseAllColumnValues( cola , subAA );
+		eraseAllColumnValues( colb , subBB );
+		
+		setAllColumnValues( cola , subBB );
+		setAllColumnValues( colb , subAA );
+	}
+	
+	
 	private void exchangeRows( final BigInteger rowa , final BigInteger rowb )
 	{
 		HashMap<BigInteger,R> subA = rowMap.get( rowa );
@@ -575,6 +819,20 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
+	private void setAllColumnValues( final BigInteger col , HashMap<BigInteger,R> rmap )
+	{
+		if( rmap != null )
+		{
+			Iterator<BigInteger> it = rmap.keySet().iterator();
+			while( it.hasNext() )
+			{
+				BigInteger row = it.next();
+				this.setVal(row, col, rmap.get( row ) );
+			}
+		}
+	}
+	
+	
 	private void setAllRowValues( final BigInteger row , HashMap<BigInteger,R> cmap )
 	{
 		if( cmap != null )
@@ -584,6 +842,20 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			{
 				BigInteger col = it.next();
 				this.setVal(row, col, cmap.get( col ) );
+			}
+		}
+	}
+	
+	
+	private void eraseAllColumnValues( final BigInteger col , HashMap<BigInteger,R> rmap )
+	{
+		if( rmap != null )
+		{
+			Iterator<BigInteger> it = rmap.keySet().iterator();
+			while( it.hasNext() )
+			{
+				BigInteger row = it.next();
+				eraseVal( row , col );
 			}
 		}
 	}

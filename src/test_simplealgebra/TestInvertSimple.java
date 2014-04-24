@@ -117,15 +117,15 @@ public class TestInvertSimple extends TestCase {
 	 */
 	public void testInvertRight() throws NotInvertibleException
 	{
-		// seedTestInvertRight( 1111 ); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// seedTestInvertRight( 2222 );
-		// seedTestInvertRight( 3333 );
-		// seedTestInvertRight( 4444 );
-		// seedTestInvertRight( 5555 );
-		// seedTestInvertRight( 6666 );
-		// seedTestInvertRight( 7777 );
-		// seedTestInvertRight( 8888 );
-		// seedTestInvertRight( 9999 );
+		seedTestInvertRight( 1111 );
+		seedTestInvertRight( 2222 );
+		seedTestInvertRight( 3333 );
+		seedTestInvertRight( 4444 );
+		seedTestInvertRight( 5555 );
+		seedTestInvertRight( 6666 );
+		seedTestInvertRight( 7777 );
+		seedTestInvertRight( 8888 );
+		seedTestInvertRight( 9999 );
 	}
 
 	
@@ -191,15 +191,15 @@ public class TestInvertSimple extends TestCase {
 	 */
 	public void testInvertSimilarity() throws NotInvertibleException
 	{
-		// seedTestInvertSimilarity( 1111 ); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// seedTestInvertSimilarity( 2222 ); !!!!!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!
-		// seedTestInvertSimilarity( 3333 );
-		// seedTestInvertSimilarity( 4444 );
-		// seedTestInvertSimilarity( 5555 );
-		// seedTestInvertSimilarity( 6666 );
-		// seedTestInvertSimilarity( 7777 );
-		// seedTestInvertSimilarity( 8888 );
-		// seedTestInvertSimilarity( 9999 );
+		seedTestInvertSimilarity( 1111 );
+		seedTestInvertSimilarity( 2222 );
+		seedTestInvertSimilarity( 3333 );
+		seedTestInvertSimilarity( 4444 );
+		seedTestInvertSimilarity( 5555 );
+		seedTestInvertSimilarity( 6666 );
+		seedTestInvertSimilarity( 7777 );
+		seedTestInvertSimilarity( 8888 );
+		seedTestInvertSimilarity( 9999 );
 	}
 	
 	
