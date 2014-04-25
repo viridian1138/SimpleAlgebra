@@ -41,7 +41,7 @@ import simplealgebra.symbolic.SymbolicInvertLeft;
 import simplealgebra.symbolic.SymbolicInvertRight;
 import simplealgebra.symbolic.SymbolicMult;
 import simplealgebra.symbolic.SymbolicNegate;
-import simplealgebra.symbolic.SymbolicZero;
+
 
 public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>> extends 
 	MutableElem<R,SquareMatrixElem<U,R,S>, SquareMatrixElemFactory<U,R,S>> {
@@ -288,7 +288,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 //				SymbolicInvertRight sr = (SymbolicInvertRight)( ae.getElemA() );
 //				if( sl.getElem() == ae.getElemB() )
 //				{
-//					this.setVal(cnt, cnt, (R)( new SymbolicIdentity( sl.getFac().getFac() ) ) );
+//					this.setVal(cnt, cnt, fac.identity() );
 //				}
 //				else
 //				{
@@ -319,7 +319,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 //						
 //						if( elbm.getElemA() == elA )
 //						{
-//							this.setVal(srcCol, destCol, (R)( new SymbolicZero( el.getFac().getFac() ) ) );
+//							this.setVal(srcCol, destCol, fac.zero() );
 //						}
 //						else
 //						{
@@ -359,7 +359,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 //				SymbolicInvertLeft sl = (SymbolicInvertLeft)( ae.getElemA() );
 //				if( sl.getElem() == ae.getElemB() )
 //				{
-//					this.setVal(cnt, cnt, (R)( new SymbolicIdentity( sl.getFac().getFac() ) ) );
+//					this.setVal(cnt, cnt, fac.identity() );
 //				}
 //				else
 //				{
@@ -390,7 +390,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 //						
 //						if( elbm.getElemA() == elA )
 //						{
-//							this.setVal(srcCol, destCol, (R)( new SymbolicZero( el.getFac().getFac() ) ) );
+//							this.setVal(srcCol, destCol, fac.zero() );
 //						}
 //						else
 //						{
@@ -430,7 +430,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				SymbolicInvertLeft sl = (SymbolicInvertLeft)( ae.getElemA() );
 				if( sl.getElem() == ae.getElemB() )
 				{
-					this.setVal(cnt, cnt, (R)( new SymbolicIdentity( sl.getFac().getFac() ) ) );
+					this.setVal(cnt, cnt, fac.identity() );
 				}
 				else
 				{
@@ -461,7 +461,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 						
 						if( elbm.getElemA() == elA )
 						{
-							this.setVal(destRow, srcRow, (R)( new SymbolicZero( el.getFac().getFac() ) ) );
+							this.setVal(destRow, srcRow, fac.zero() );
 						}
 						else
 						{
@@ -500,7 +500,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				SymbolicInvertRight sr = (SymbolicInvertRight)( ae.getElemB() );
 				if( ae.getElemA() == sr.getElem() )
 				{
-					this.setVal(cnt, cnt, (R)( new SymbolicIdentity( sr.getFac().getFac() ) ) );
+					this.setVal(cnt, cnt, fac.identity() );
 				}
 				else
 				{
@@ -531,7 +531,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 						
 						if( elbm.getElemB() == elA )
 						{
-							this.setVal(destRow, srcRow, (R)( new SymbolicZero( el.getFac().getFac() ) ) );
+							this.setVal(destRow, srcRow, fac.zero() );
 						}
 						else
 						{
@@ -804,8 +804,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	{
 		try
 		{
-			// R tp = this.get(coli, coli).invertRight(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			R tp = this.get(coli, coli).invertLeft(); // !!!!!!!!!!!!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!
+			R tp = this.get(coli, coli).invertRight();
 			return( tp );
 		}
 		catch( NotInvertibleException ex )
@@ -816,8 +815,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			{
 				try
 				{
-					// R tp = this.get(cnt, coli).invertRight(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					R tp = this.get(cnt, coli).invertLeft(); // !!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					R tp = this.get(cnt, coli).invertRight();
 					exchangeColumns( coli , cnt );
 					ret.exchangeColumns( coli , cnt );
 					return( tp );
@@ -836,8 +834,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	{
 		try
 		{
-			// R tp = this.get(rowi, rowi).invertRight(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			R tp = this.get(rowi, rowi).invertLeft(); // !!!!!!!!!!!!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!
+			R tp = this.get(rowi, rowi).invertRight();
 			return( tp );
 		}
 		catch( NotInvertibleException ex )
@@ -848,8 +845,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			{
 				try
 				{
-					// R tp = this.get(cnt, rowi).invertRight(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					R tp = this.get(cnt, rowi).invertLeft(); // !!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					R tp = this.get(cnt, rowi).invertRight();
 					exchangeRows( rowi , cnt );
 					ret.exchangeRows( rowi , cnt );
 					return( tp );
