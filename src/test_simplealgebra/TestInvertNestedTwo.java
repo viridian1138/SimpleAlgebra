@@ -37,6 +37,11 @@ import simplealgebra.SquareMatrixElem;
 import simplealgebra.SquareMatrixElemFactory;
 
 /**
+ * Tests inverses for a Matrix Algebra M_2(M_2(R)).  For more information see:
+ * 
+ * http://en.wikipedia.org/wiki/Matrix_ring
+ * 
+ * 
  * @author thorngreen
  *
  */
@@ -48,32 +53,29 @@ public class TestInvertNestedTwo extends TestCase {
 	public void testInvertLeft() throws NotInvertibleException
 	{
 		seedTestInvertLeft( 1111 );
-		/* seedTestInvertLeft( 2222 );
+		seedTestInvertLeft( 2222 );
 		seedTestInvertLeft( 3333 );
 		seedTestInvertLeft( 4444 );
 		seedTestInvertLeft( 5555 );
 		seedTestInvertLeft( 6666 );
 		seedTestInvertLeft( 7777 );
 		seedTestInvertLeft( 8888 );
-		seedTestInvertLeft( 9999 ); */
+		seedTestInvertLeft( 9999 );
 	}
 	
 	
 	protected SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> generateMat( final Random rand,
-			SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory> se , boolean stmatch )
+			SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory> se )
 	{
 		final SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> mat = se.zero();
 		
 		int i;
 		int j;
 		
-		// final double dx = 2.0 * ( rand.nextDouble() ) - 1.0;
-		
 		for( i = 0 ; i < 2 ; i++ )
 		{
 			for( j = 0 ; j < 2 ; j++ )
 			{
-				// DoubleElem val = new DoubleElem( ( i == j ) /* && stmatch */ ? /* dx */ 2.0 * ( rand.nextDouble() ) - 1.0 : 0.0 ); 
 				DoubleElem val = new DoubleElem( 2.0 * ( rand.nextDouble() ) - 1.0 );
 				mat.setVal( BigInteger.valueOf(i) , BigInteger.valueOf(j) , val );
 			}
@@ -117,7 +119,7 @@ public class TestInvertNestedTwo extends TestCase {
 		{
 			for( j = 0 ; j < 2 ; j++ )
 			{
-				SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> val = generateMat( rand , se , i == j );
+				SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> val = generateMat( rand , se );
 				mat.setVal( BigInteger.valueOf(i) , BigInteger.valueOf(j) , val );
 			}
 		}
@@ -130,43 +132,13 @@ public class TestInvertNestedTwo extends TestCase {
 		
 		final SquareMatrixElem<TestDimensionTwo, 
 			SquareMatrixElem<TestDimensionTwo, DoubleElem, DoubleElemFactory>, 
-			SquareMatrixElemFactory<TestDimensionTwo, DoubleElem, DoubleElemFactory>> shouldBeIdentA = mat.mult( inv );
-		
-		final SquareMatrixElem<TestDimensionTwo, 
-			SquareMatrixElem<TestDimensionTwo, DoubleElem, DoubleElemFactory>, 
-			SquareMatrixElemFactory<TestDimensionTwo, DoubleElem, DoubleElemFactory>> shouldBeIdentB = inv.mult( mat );
+			SquareMatrixElemFactory<TestDimensionTwo, DoubleElem, DoubleElemFactory>> shouldBeIdent = inv.mult( mat );
 		
 		
 		mat.validate();
 		inv.validate();
-		shouldBeIdentA.validate();
-		shouldBeIdentB.validate();
+		shouldBeIdent.validate();
 		
-		
-		System.out.println( "********************************************" );
-		for( i = 0 ; i < 2 ; i++ )
-		{
-			for( j = 0 ; j < 2 ; j++ )
-			{
-				
-				
-				int i2;
-				int j2;
-				
-				for( i2 = 0 ; i2 < 2 ; i2++ )
-				{
-					for( j2 = 0 ; j2 < 2 ; j2++ )
-					{
-						System.out.println( inv.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j)  ).
-								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2)  ).getVal() );
-						
-					}
-				}
-			}
-		}
-		
-		
-		if( i != 0 ) return;
 		
 		
 		for( i = 0 ; i < 2 ; i++ )
@@ -185,11 +157,7 @@ public class TestInvertNestedTwo extends TestCase {
 						final double matchVal = ( i == j ) && ( i2 == j2 ) ? 1.0 : 0.0;
 						
 						Assert.assertEquals( matchVal , 
-								shouldBeIdentA.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j) ).
-								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2) ).getVal() , 1E-7 );
-						
-						Assert.assertEquals( matchVal , 
-								shouldBeIdentB.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j) ).
+								shouldBeIdent.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j) ).
 								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2) ).getVal() , 1E-7 );
 						
 					}
@@ -206,14 +174,14 @@ public class TestInvertNestedTwo extends TestCase {
 	public void testInvertRight() throws NotInvertibleException
 	{
 		seedTestInvertRight( 1111 );
-		/* seedTestInvertRight( 2222 );
+		seedTestInvertRight( 2222 );
 		seedTestInvertRight( 3333 );
 		seedTestInvertRight( 4444 );
 		seedTestInvertRight( 5555 );
 		seedTestInvertRight( 6666 );
 		seedTestInvertRight( 7777 );
 		seedTestInvertRight( 8888 );
-		seedTestInvertRight( 9999 ); */
+		seedTestInvertRight( 9999 );
 	}
 
 	
@@ -249,7 +217,7 @@ public class TestInvertNestedTwo extends TestCase {
 		{
 			for( j = 0 ; j < 2 ; j++ )
 			{
-				SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> val = generateMat( rand , se , i == j );
+				SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> val = generateMat( rand , se );
 				mat.setVal( BigInteger.valueOf(i) , BigInteger.valueOf(j) , val );
 			}
 		}
@@ -262,43 +230,14 @@ public class TestInvertNestedTwo extends TestCase {
 		
 		final SquareMatrixElem<TestDimensionTwo, 
 			SquareMatrixElem<TestDimensionTwo, DoubleElem, DoubleElemFactory>, 
-			SquareMatrixElemFactory<TestDimensionTwo, DoubleElem, DoubleElemFactory>> shouldBeIdentA = mat.mult( inv );
-		
-		final SquareMatrixElem<TestDimensionTwo, 
-			SquareMatrixElem<TestDimensionTwo, DoubleElem, DoubleElemFactory>, 
-			SquareMatrixElemFactory<TestDimensionTwo, DoubleElem, DoubleElemFactory>> shouldBeIdentB = inv.mult( mat );
+			SquareMatrixElemFactory<TestDimensionTwo, DoubleElem, DoubleElemFactory>> shouldBeIdent = mat.mult( inv );
 		
 		
 		mat.validate();
 		inv.validate();
-		shouldBeIdentA.validate();
-		shouldBeIdentB.validate();
+		shouldBeIdent.validate();
 		
-		
-		System.out.println( "********************************************" );
-		for( i = 0 ; i < 2 ; i++ )
-		{
-			for( j = 0 ; j < 2 ; j++ )
-			{
-				
-				
-				int i2;
-				int j2;
-				
-				for( i2 = 0 ; i2 < 2 ; i2++ )
-				{
-					for( j2 = 0 ; j2 < 2 ; j2++ )
-					{
-						System.out.println( inv.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j)  ).
-								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2)  ).getVal() );
-						
-					}
-				}
-			}
-		}
-		
-		
-		if( i != 0 ) return;
+	
 		
 		for( i = 0 ; i < 2 ; i++ )
 		{
@@ -315,15 +254,8 @@ public class TestInvertNestedTwo extends TestCase {
 					{
 						final double matchVal = ( i == j ) && ( i2 == j2 ) ? 1.0 : 0.0;
 						
-						// Comment asserts for now.
-						
 						Assert.assertEquals( matchVal , 
-								shouldBeIdentA.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j)  ).
-								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2)  ).getVal() , 1E-7 );
-						
-						
-						Assert.assertEquals( matchVal , 
-								shouldBeIdentB.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j)  ).
+								shouldBeIdent.getVal(BigInteger.valueOf(i) , BigInteger.valueOf(j)  ).
 								getVal(BigInteger.valueOf(i2) , BigInteger.valueOf(j2)  ).getVal() , 1E-7 );
 						
 					}

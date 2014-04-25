@@ -37,6 +37,11 @@ import simplealgebra.SquareMatrixElem;
 import simplealgebra.SquareMatrixElemFactory;
 
 /**
+ * Tests inverses for a Matrix Algebra M_4(M_4(R)).  For more information see:
+ * 
+ * http://en.wikipedia.org/wiki/Matrix_ring
+ * 
+ * 
  * @author thorngreen
  *
  */
@@ -158,15 +163,15 @@ public class TestInvertNestedRight extends TestCase {
 	 */
 	public void testInvertRightRevCoeff() throws NotInvertibleException
 	{
-		// seedTestInvertRightRevCoeff( 1111 ); !!!!!!!!!!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// seedTestInvertRightRevCoeff( 2222 );
-		// seedTestInvertRightRevCoeff( 3333 );
-		// seedTestInvertRightRevCoeff( 4444 );
-		// seedTestInvertRightRevCoeff( 5555 );
-		// seedTestInvertRightRevCoeff( 6666 );
-		// seedTestInvertRightRevCoeff( 7777 );
-		// seedTestInvertRightRevCoeff( 8888 );
-		// seedTestInvertRightRevCoeff( 9999 );
+		seedTestInvertRightRevCoeff( 1111 );
+		seedTestInvertRightRevCoeff( 2222 );
+		seedTestInvertRightRevCoeff( 3333 );
+		seedTestInvertRightRevCoeff( 4444 );
+		seedTestInvertRightRevCoeff( 5555 );
+		seedTestInvertRightRevCoeff( 6666 );
+		seedTestInvertRightRevCoeff( 7777 );
+		seedTestInvertRightRevCoeff( 8888 );
+		seedTestInvertRightRevCoeff( 9999 );
 	}
 
 	
@@ -209,8 +214,8 @@ public class TestInvertNestedRight extends TestCase {
 		
 		final SquareMatrixElem<TestDimensionFour, 
 			SquareMatrixElem<TestDimensionFour, DoubleElem, DoubleElemFactory>, 
-			SquareMatrixElemFactory<TestDimensionFour, DoubleElem, DoubleElemFactory>> inv = null; // !!!!!!!!!!!!!!!!!!!
-				// mat.handleOptionalOp(SquareMatrixElem.SquareMatrixCmd.INVERT_Right_REV_COEFF, null);
+			SquareMatrixElemFactory<TestDimensionFour, DoubleElem, DoubleElemFactory>> inv = 
+				mat.handleOptionalOp(SquareMatrixElem.SquareMatrixCmd.INVERT_RIGHT_REV_COEFF, null);
 		
 		
 		ArrayList<SquareMatrixElem<TestDimensionFour, 

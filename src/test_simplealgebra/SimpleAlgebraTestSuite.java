@@ -46,6 +46,8 @@ public class SimpleAlgebraTestSuite extends TestSuite {
 		s.addTestSuite( TestPhasorWithUncertainty.class );
 		s.addTestSuite( TestMultivectorInvert.class );
 		s.addTestSuite( TestQuaternionInvert.class );
+		s.addTestSuite( TestInvertNestedOne.class );
+		s.addTestSuite( TestInvertNestedTwo.class );
 		s.addTestSuite( TestInvertLeftSymbolic.class );
 		// s.addTestSuite( TestInvertRightSymbolic.class ); !!!!!!!!!!!!!!!!! for now !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		return( s );

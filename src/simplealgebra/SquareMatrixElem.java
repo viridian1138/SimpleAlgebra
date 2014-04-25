@@ -48,6 +48,7 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	
 	public static enum SquareMatrixCmd {
 		INVERT_LEFT_REV_COEFF,
+		INVERT_RIGHT_REV_COEFF,
 		MULT_REV_COEFF,
 		TRANSPOSE
 	};
@@ -248,6 +249,11 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 	}
 	
 	
+	private SquareMatrixElem<U, R, S> invertRightRevCoeff() throws NotInvertibleException {
+		SquareMatrixElem<U,R,S> copy = icopy();
+		return( copy.iinvertRightRevCoeff() );
+	}
+	
 
 	@Override
 	public SquareMatrixElem<U, R, S> invertLeft() throws NotInvertibleException {
@@ -299,6 +305,77 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 					R mult = this.getVal(srcCol, destCol);
 					columnSubtractRight( srcCol , destCol , mult );
 					ret.columnSubtractRight(srcCol, destCol, mult);
+					
+//					if( mult instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!
+//					{
+//						SymbolicAdd el = (SymbolicAdd)( this.getVal(srcCol, destCol) );
+//						SymbolicElem elA = el.getElemA();
+//						SymbolicNegate elB = (SymbolicNegate)( el.getElemB() );
+//						SymbolicMult elbm = (SymbolicMult)( elB.getElem() );
+//						if( ! ( elbm.getElemB() instanceof SymbolicIdentity ) )
+//						{
+//							throw( new RuntimeException( "Fail." ) );
+//						}
+//						
+//						if( elbm.getElemA() == elA )
+//						{
+//							this.setVal(srcCol, destCol, (R)( new SymbolicZero( el.getFac().getFac() ) ) );
+//						}
+//						else
+//						{
+//							throw( new RuntimeException( "Fail." ) );
+//						}
+//					}
+					
+				}
+				
+				destCol = destCol.add( BigInteger.ONE );
+			}
+			
+			cnt = cnt.add( BigInteger.ONE );
+		}
+		
+		return( ret );
+	}
+	
+	
+	
+	private SquareMatrixElem<U, R, S> iinvertRightRevCoeff() throws NotInvertibleException
+	{
+		SquareMatrixElem<U,R,S> ret = getFac().identity();
+		
+		final BigInteger max = dim.getVal();
+		BigInteger cnt = BigInteger.ZERO;
+		while( cnt.compareTo( max ) < 0 )
+		{
+			final R mv = setUpColumnLeft( cnt , ret );
+			
+			multiplyThroughColumnLeft( cnt , mv );
+			ret.multiplyThroughColumnLeft( cnt , mv);
+			
+//			if( mv instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			{
+//				SymbolicMult ae = (SymbolicMult)( this.getVal(cnt, cnt) );
+//				SymbolicInvertLeft sl = (SymbolicInvertLeft)( ae.getElemA() );
+//				if( sl.getElem() == ae.getElemB() )
+//				{
+//					this.setVal(cnt, cnt, (R)( new SymbolicIdentity( sl.getFac().getFac() ) ) );
+//				}
+//				else
+//				{
+//					throw( new RuntimeException( "Fail." ) );
+//				}
+//			}
+			
+			BigInteger srcCol = cnt;
+			BigInteger destCol = BigInteger.ZERO;
+			while( destCol.compareTo( max ) < 0 )
+			{
+				if( destCol.compareTo(srcCol) != 0 )
+				{
+					R mult = this.getVal(srcCol, destCol);
+					columnSubtractLeft( srcCol , destCol , mult );
+					ret.columnSubtractLeft(srcCol, destCol, mult);
 					
 //					if( mult instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!
 //					{
@@ -1180,6 +1257,13 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				case INVERT_LEFT_REV_COEFF:
 				{
 					SquareMatrixElem<U,R,S> ret = invertLeftRevCoeff( );
+					return( ret );
+				}
+				// break;
+				
+				case INVERT_RIGHT_REV_COEFF:
+				{
+					SquareMatrixElem<U,R,S> ret = invertRightRevCoeff( );
 					return( ret );
 				}
 				// break;

@@ -74,6 +74,14 @@ public class SquareMatrixElemFactory<U extends NumDimensions, R extends Elem<R,?
 					return( new SymbolicInvertLeftRevCoeff<U,R,S>( arg , arg.getFac().getFac() ) );
 				}
 				// break;
+				
+				case INVERT_RIGHT_REV_COEFF:
+				{
+					SymbolicElem<SquareMatrixElem<U, R, S>, SquareMatrixElemFactory<U,R,S>> arg
+						= args.get( 0 );
+					return( new SymbolicInvertRightRevCoeff<U,R,S>( arg , arg.getFac().getFac() ) );
+				}
+				// break;
 			
 				case MULT_REV_COEFF:
 				{
