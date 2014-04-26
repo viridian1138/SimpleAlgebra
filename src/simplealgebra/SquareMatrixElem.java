@@ -282,19 +282,19 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			multiplyThroughColumnRight( cnt , mv );
 			ret.multiplyThroughColumnRight( cnt , mv);
 			
-//			if( mv instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//			{
-//				SymbolicMult ae = (SymbolicMult)( this.getVal(cnt, cnt) );
-//				SymbolicInvertRight sr = (SymbolicInvertRight)( ae.getElemA() );
-//				if( sl.getElem() == ae.getElemB() )
-//				{
-//					this.setVal(cnt, cnt, fac.identity() );
-//				}
-//				else
-//				{
-//					throw( new RuntimeException( "Fail." ) );
-//				}
-//			}
+			if( mv instanceof SymbolicElem )
+			{
+				SymbolicMult ae = (SymbolicMult)( this.getVal(cnt, cnt) );
+				SymbolicInvertRight sr = (SymbolicInvertRight)( ae.getElemB() );
+				if( sr.getElem() == ae.getElemA() )
+				{
+					this.setVal(cnt, cnt, fac.identity() );
+				}
+				else
+				{
+					throw( new RuntimeException( "Fail." ) );
+				}
+			}
 			
 			BigInteger srcCol = cnt;
 			BigInteger destCol = BigInteger.ZERO;
@@ -306,26 +306,26 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 					columnSubtractRight( srcCol , destCol , mult );
 					ret.columnSubtractRight(srcCol, destCol, mult);
 					
-//					if( mult instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!
-//					{
-//						SymbolicAdd el = (SymbolicAdd)( this.getVal(srcCol, destCol) );
-//						SymbolicElem elA = el.getElemA();
-//						SymbolicNegate elB = (SymbolicNegate)( el.getElemB() );
-//						SymbolicMult elbm = (SymbolicMult)( elB.getElem() );
-//						if( ! ( elbm.getElemB() instanceof SymbolicIdentity ) )
-//						{
-//							throw( new RuntimeException( "Fail." ) );
-//						}
-//						
-//						if( elbm.getElemA() == elA )
-//						{
-//							this.setVal(srcCol, destCol, fac.zero() );
-//						}
-//						else
-//						{
-//							throw( new RuntimeException( "Fail." ) );
-//						}
-//					}
+					if( mult instanceof SymbolicElem )
+					{
+						SymbolicAdd el = (SymbolicAdd)( this.getVal(srcCol, destCol) );
+						SymbolicElem elA = el.getElemA();
+						SymbolicNegate elB = (SymbolicNegate)( el.getElemB() );
+						SymbolicMult elbm = (SymbolicMult)( elB.getElem() );
+						if( ! ( elbm.getElemA() instanceof SymbolicIdentity ) )
+						{
+							throw( new RuntimeException( "Fail." ) );
+						}
+						
+						if( elbm.getElemB() == elA )
+						{
+							this.setVal(srcCol, destCol, fac.zero() );
+						}
+						else
+						{
+							throw( new RuntimeException( "Fail." ) );
+						}
+					}
 					
 				}
 				
@@ -353,19 +353,19 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 			multiplyThroughColumnLeft( cnt , mv );
 			ret.multiplyThroughColumnLeft( cnt , mv);
 			
-//			if( mv instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//			{
-//				SymbolicMult ae = (SymbolicMult)( this.getVal(cnt, cnt) );
-//				SymbolicInvertLeft sl = (SymbolicInvertLeft)( ae.getElemA() );
-//				if( sl.getElem() == ae.getElemB() )
-//				{
-//					this.setVal(cnt, cnt, fac.identity() );
-//				}
-//				else
-//				{
-//					throw( new RuntimeException( "Fail." ) );
-//				}
-//			}
+			if( mv instanceof SymbolicElem )
+			{
+				SymbolicMult ae = (SymbolicMult)( this.getVal(cnt, cnt) );
+				SymbolicInvertLeft sl = (SymbolicInvertLeft)( ae.getElemA() );
+				if( sl.getElem() == ae.getElemB() )
+				{
+					this.setVal(cnt, cnt, fac.identity() );
+				}
+				else
+				{
+					throw( new RuntimeException( "Fail." ) );
+				}
+			}
 			
 			BigInteger srcCol = cnt;
 			BigInteger destCol = BigInteger.ZERO;
@@ -377,26 +377,26 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 					columnSubtractLeft( srcCol , destCol , mult );
 					ret.columnSubtractLeft(srcCol, destCol, mult);
 					
-//					if( mult instanceof SymbolicElem ) !!!!!!!!!!!!!!!!!!!!!!!!
-//					{
-//						SymbolicAdd el = (SymbolicAdd)( this.getVal(srcCol, destCol) );
-//						SymbolicElem elA = el.getElemA();
-//						SymbolicNegate elB = (SymbolicNegate)( el.getElemB() );
-//						SymbolicMult elbm = (SymbolicMult)( elB.getElem() );
-//						if( ! ( elbm.getElemB() instanceof SymbolicIdentity ) )
-//						{
-//							throw( new RuntimeException( "Fail." ) );
-//						}
-//						
-//						if( elbm.getElemA() == elA )
-//						{
-//							this.setVal(srcCol, destCol, fac.zero() );
-//						}
-//						else
-//						{
-//							throw( new RuntimeException( "Fail." ) );
-//						}
-//					}
+					if( mult instanceof SymbolicElem )
+					{
+						SymbolicAdd el = (SymbolicAdd)( this.getVal(srcCol, destCol) );
+						SymbolicElem elA = el.getElemA();
+						SymbolicNegate elB = (SymbolicNegate)( el.getElemB() );
+						SymbolicMult elbm = (SymbolicMult)( elB.getElem() );
+						if( ! ( elbm.getElemB() instanceof SymbolicIdentity ) )
+						{
+							throw( new RuntimeException( "Fail." ) );
+						}
+						
+						if( elbm.getElemA() == elA )
+						{
+							this.setVal(srcCol, destCol, fac.zero() );
+						}
+						else
+						{
+							throw( new RuntimeException( "Fail." ) );
+						}
+					}
 					
 				}
 				
@@ -563,7 +563,6 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				BigInteger row = it.next();
 				R srcVal = subMapSrc.get( row );
 				R srcMultNegated = mult.mult( srcVal ).negate();
-				// !! R srcMultNegated = srcVal.mult( mult ).negate();
 				R dstVal = subMapDest.get( row );
 				if( dstVal != null )
 				{
@@ -590,7 +589,6 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				BigInteger col = it.next();
 				R srcVal = subMapSrc.get( col );
 				R srcMultNegated = mult.mult( srcVal ).negate();
-				// !! R srcMultNegated = srcVal.mult( mult ).negate();
 				R dstVal = subMapDest.get( col );
 				if( dstVal != null )
 				{
@@ -618,7 +616,6 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				BigInteger row = it.next();
 				R srcVal = subMapSrc.get( row );
 				R srcMultNegated = srcVal.mult( mult ).negate();
-				// !! R srcMultNegated = mult.mult( srcVal ).negate();
 				R dstVal = subMapDest.get( row );
 				if( dstVal != null )
 				{
@@ -646,7 +643,6 @@ public class SquareMatrixElem<U extends NumDimensions, R extends Elem<R,?>, S ex
 				BigInteger col = it.next();
 				R srcVal = subMapSrc.get( col );
 				R srcMultNegated = srcVal.mult( mult ).negate();
-				// !! R srcMultNegated = mult.mult( srcVal ).negate();
 				R dstVal = subMapDest.get( col );
 				if( dstVal != null )
 				{

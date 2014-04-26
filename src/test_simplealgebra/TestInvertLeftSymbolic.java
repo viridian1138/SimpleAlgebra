@@ -33,48 +33,53 @@ package test_simplealgebra;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
 import simplealgebra.DoubleElem;
 import simplealgebra.DoubleElemFactory;
 import simplealgebra.Elem;
 import simplealgebra.NotInvertibleException;
 import simplealgebra.SquareMatrixElem;
 import simplealgebra.SquareMatrixElemFactory;
-import simplealgebra.symbolic.*;
-import simplealgebra.*;
+import simplealgebra.symbolic.MultiplicativeDistributionRequiredException;
+import simplealgebra.symbolic.SymbolicAdd;
+import simplealgebra.symbolic.SymbolicElem;
+import simplealgebra.symbolic.SymbolicElemFactory;
+import simplealgebra.symbolic.SymbolicIdentity;
+import simplealgebra.symbolic.SymbolicInvertLeft;
+import simplealgebra.symbolic.SymbolicInvertRight;
+import simplealgebra.symbolic.SymbolicMult;
+import simplealgebra.symbolic.SymbolicNegate;
 
 
 
 public class TestInvertLeftSymbolic extends TestCase 
 {
 	
-	final static int NUM_DIM = 2;
+	final static int NUM_DIM = 4;
 	
 	
-	private class AElem extends SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>
+	private class AElem extends SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>
 	{
 		private BigInteger row;
 		private BigInteger col;
 
 		
-		public AElem(SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory> _fac , BigInteger _row , BigInteger _col ) {
+		public AElem(SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory> _fac , BigInteger _row , BigInteger _col ) {
 			super(_fac);
 			row = _row;
 			col = _col;
 		}
 
 		@Override
-		public SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> eval() throws NotInvertibleException,
+		public SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory> eval() throws NotInvertibleException,
 				MultiplicativeDistributionRequiredException {
 			throw( new RuntimeException( "NotSupported" ) );
 		}
 
 		@Override
-		public SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory> evalPartialDerivative(ArrayList<Elem<?, ?>> withRespectTo)
+		public SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory> evalPartialDerivative(ArrayList<Elem<?, ?>> withRespectTo)
 				throws NotInvertibleException,
 				MultiplicativeDistributionRequiredException {
 			throw( new RuntimeException( "NotSupported" ) );
@@ -95,7 +100,7 @@ public class TestInvertLeftSymbolic extends TestCase
 		}
 		
 		@Override
-		public boolean symbolicEquals( SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>> b )
+		public boolean symbolicEquals( SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>> b )
 		{
 			if( b instanceof AElem )
 			{
@@ -114,7 +119,7 @@ public class TestInvertLeftSymbolic extends TestCase
 	
 	
 	private void verifyNoInvertRight( 
-			SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>> in )
+			SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>> in )
 	{
 		if( in instanceof AElem )
 		{
@@ -128,7 +133,7 @@ public class TestInvertLeftSymbolic extends TestCase
 		
 		if( in instanceof SymbolicAdd )
 		{
-			SymbolicAdd<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>> add = (SymbolicAdd<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>) in;
+			SymbolicAdd<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>> add = (SymbolicAdd<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>) in;
 			verifyNoInvertRight( add.getElemA() );
 			verifyNoInvertRight( add.getElemB() );
 			return;
@@ -137,7 +142,7 @@ public class TestInvertLeftSymbolic extends TestCase
 		
 		if( in instanceof SymbolicNegate )
 		{
-			SymbolicNegate<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>> neg = (SymbolicNegate<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>) in;
+			SymbolicNegate<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>> neg = (SymbolicNegate<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>) in;
 			verifyNoInvertRight( neg.getElem() );
 			return;
 		}
@@ -145,7 +150,7 @@ public class TestInvertLeftSymbolic extends TestCase
 		
 		if( in instanceof SymbolicMult )
 		{
-			SymbolicMult<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>> add = (SymbolicMult<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>) in;
+			SymbolicMult<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>> add = (SymbolicMult<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>) in;
 			verifyNoInvertRight( add.getElemA() );
 			verifyNoInvertRight( add.getElemB() );
 			return;
@@ -154,7 +159,7 @@ public class TestInvertLeftSymbolic extends TestCase
 		
 		if( in instanceof SymbolicInvertLeft )
 		{
-			SymbolicInvertLeft<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>> inv = (SymbolicInvertLeft<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>) in;
+			SymbolicInvertLeft<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>> inv = (SymbolicInvertLeft<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>) in;
 			verifyNoInvertRight( inv.getElem() );
 			return;
 		}
@@ -177,23 +182,23 @@ public class TestInvertLeftSymbolic extends TestCase
 	
 	public void testInvertRightElems() throws NotInvertibleException
 	{
-		final TestDimensionTwo td = new TestDimensionTwo();
+		final TestDimensionFour td = new TestDimensionFour();
 		
 		final DoubleElemFactory dl = new DoubleElemFactory();
 		
-		final SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory> se = 
-				new SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>(dl, td);
+		final SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory> se = 
+				new SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>(dl, td);
 		
-		final SymbolicElemFactory<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>> ye = 
-				new SymbolicElemFactory<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>(se);
+		final SymbolicElemFactory<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>> ye = 
+				new SymbolicElemFactory<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>(se);
 		
-		final SquareMatrixElemFactory<TestDimensionTwo,
-		SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>> se2 = 
-				new SquareMatrixElemFactory<TestDimensionTwo,
-				SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>>(ye, td);
+		final SquareMatrixElemFactory<TestDimensionFour,
+		SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>> se2 = 
+				new SquareMatrixElemFactory<TestDimensionFour,
+				SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>>(ye, td);
 		
-		final SquareMatrixElem<TestDimensionTwo,
-		SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>>
+		final SquareMatrixElem<TestDimensionFour,
+		SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>>
 			mat = se2.zero();
 		
 		
@@ -212,8 +217,8 @@ public class TestInvertLeftSymbolic extends TestCase
 		
 		
 		
-		final SquareMatrixElem<TestDimensionTwo,
-		SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>>
+		final SquareMatrixElem<TestDimensionFour,
+		SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>>
 			inv = mat.invertLeft();
 		
 		
@@ -223,21 +228,21 @@ public class TestInvertLeftSymbolic extends TestCase
 		{
 			for( j = 0 ; j < NUM_DIM ; j++ )
 			{
-				SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>
+				SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>
 					el = inv.get( BigInteger.valueOf(i) , BigInteger.valueOf(j) );
 				verifyNoInvertRight( el );
 			}
 		}
 		
 		
-//		final SquareMatrixElem<TestDimensionTwo,
-//			SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>>
+//		final SquareMatrixElem<TestDimensionFour,
+//			SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>,SymbolicElemFactory<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>>
 //				shouldBeIdent = inv.mult( mat );
 //		for( i = 0 ; i < NUM_DIM ; i++ )
 //		{
 //			for( j = 0 ; j < NUM_DIM ; j++ )
 //			{
-//				SymbolicElem<SquareMatrixElem<TestDimensionTwo,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionTwo,DoubleElem,DoubleElemFactory>>
+//				SymbolicElem<SquareMatrixElem<TestDimensionFour,DoubleElem,DoubleElemFactory>,SquareMatrixElemFactory<TestDimensionFour,DoubleElem,DoubleElemFactory>>
 //					el = shouldBeIdent.get( BigInteger.valueOf(i) , BigInteger.valueOf(j) );
 //				el = el.handleOptionalOp( SymbolicOps.DISTRIBUTE_SIMPLIFY , null );
 //				System.out.println( el.writeString() );
