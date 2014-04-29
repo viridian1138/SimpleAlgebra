@@ -51,6 +51,7 @@ public class SimpleAlgebraTestSuite extends TestSuite {
 		s.addTestSuite( TestInvertLeftSymbolic.class );
 		s.addTestSuite( TestInvertRightSymbolic.class );
 		s.addTestSuite( TestInvertNestedLeftNTwo.class );
+		s.addTestSuite( TestInvertNestedRightNTwo.class );
 		return( s );
 	}
 	
