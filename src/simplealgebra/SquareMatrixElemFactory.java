@@ -113,6 +113,12 @@ public class SquareMatrixElemFactory<U extends NumDimensions, R extends Elem<R,?
 	}
 	
 	
+	public S getFac()
+	{
+		return( fac );
+	}
+	
+	
 	private S fac;
 	private U dim;
 
