@@ -31,6 +31,7 @@ package simplealgebra.et;
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.symbolic.SymbolicElem;
+import simplealgebra.symbolic.SymbolicElemFactory;
 
 
 /**
@@ -44,7 +45,7 @@ import simplealgebra.symbolic.SymbolicElem;
  */
 public abstract class MetricTensorFactory<Z extends Object, R extends Elem<R,?>, S extends ElemFactory<R,S>> {
 	
-	public abstract SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> 
+	public abstract SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> 
 		getMetricTensor( boolean covariantIndices , Z index0 , Z index1 );
 
 }

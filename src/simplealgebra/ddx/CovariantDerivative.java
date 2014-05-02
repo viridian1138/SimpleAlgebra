@@ -26,12 +26,19 @@
 
 package simplealgebra.ddx;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
-import simplealgebra.NumDimensions;
+import simplealgebra.et.AffineConnectionFactory;
 import simplealgebra.et.EinsteinTensorElem;
 import simplealgebra.et.EinsteinTensorElemFactory;
+import simplealgebra.et.MetricTensorFactory;
+import simplealgebra.et.OrdinaryDerivativeFactory;
+import simplealgebra.et.SymbolicRegenCovar;
+import simplealgebra.et.TemporaryIndexFactory;
 import simplealgebra.symbolic.MultiplicativeDistributionRequiredException;
 import simplealgebra.symbolic.SymbolicElem;
 import simplealgebra.symbolic.SymbolicElemFactory;
@@ -42,35 +49,80 @@ import simplealgebra.symbolic.SymbolicElemFactory;
  * 
  * @author thorngreen
  *
- * @param <U>
+ * @param <Z>
  * @param <R>
  * @param <S>
  */
-public class CovariantDerivative<U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> 
-		extends DerivativeElem<EinsteinTensorElem<U,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>,EinsteinTensorElemFactory<U,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>>
+public class CovariantDerivative<Z extends Object, R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> 
+		extends DerivativeElem<EinsteinTensorElem<Z,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>,EinsteinTensorElemFactory<Z,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>>
 {
 
-	public CovariantDerivative( EinsteinTensorElemFactory<U, SymbolicElem<R, S>, 
+	public CovariantDerivative( EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, 
 				SymbolicElemFactory<R, S>> _fac , 
-			EinsteinTensorElem<U, SymbolicElem<R, S>, 
-				SymbolicElemFactory<R, S>> _vectorWithRespectTo,
-			U _dim ,
-			DirectionalDerivativePartialFactory<R,S,K> _dfac )
+		SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> _tensorWithRespectTo,
+			TemporaryIndexFactory<Z> _temp,
+			MetricTensorFactory<Z,R,S> _metric,
+			OrdinaryDerivativeFactory<Z,R,S> _odfac )
 	{
 		super( _fac );
-		vectorWithRespectTo = _vectorWithRespectTo;
-		dim = _dim;
-		dfac = _dfac;
+		tensorWithRespectTo = _tensorWithRespectTo;
+		temp = _temp;
+		metric = _metric;
+		odfac = _odfac;
 	}
 	
+	
+	
+	public SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>>
+		genTerms() throws NotInvertibleException, MultiplicativeDistributionRequiredException 
+	{
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>>
+			deriv = odfac.getOrdinaryDerivative( tensorWithRespectTo , derivativeIndex );
+		
+		SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>>
+			sum = deriv;
+		
+		AffineConnectionFactory<Z,R,S> afac = new AffineConnectionFactory<Z,R,S>( metric , 
+				temp , odfac );
+		
+		final ArrayList<Z> iCovar = tensorWithRespectTo.eval().getCovariantIndices();
+		
+		Iterator<Z> it = iCovar.iterator();
+		
+		while( it.hasNext() )
+		{
+			Z index = it.next();
+			Z r = temp.getTemp();
+			SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>>
+				conn = afac.getAffineConnection( derivativeIndex , index , r );
+			
+			ArrayList<Z> reCovar = new ArrayList<Z>( iCovar.size() );
+			Iterator<Z> it2 = ((ArrayList<Z>)(iCovar.clone())).iterator();
+			while( it2.hasNext() )
+			{
+				Z nxt = it2.next();
+				reCovar.add( nxt != index ? nxt : r );
+			}
+			
+			SymbolicRegenCovar<Z,SymbolicElem<R,S>,SymbolicElemFactory<R,S>> src = 
+					new SymbolicRegenCovar<Z,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>( tensorWithRespectTo , fac, reCovar );
+			
+			SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>>
+				sconn = conn.mult( src );
+			
+			sum = sum.add( sconn );
+		}
+		
+		return( sum );
+		
+	}
+	
+	
 	@Override
-	public EinsteinTensorElem<U, SymbolicElem<R, S>, SymbolicElemFactory<R, S>> evalDerivative(
-			SymbolicElem<EinsteinTensorElem<U, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>, EinsteinTensorElemFactory<U, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> in )
+	public EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>> evalDerivative(
+			SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>, EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> in )
 			throws NotInvertibleException, MultiplicativeDistributionRequiredException {
-		
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TBD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		return( null );
+		return( this.genTerms().eval() );
 	}
 	
 
@@ -80,10 +132,12 @@ public class CovariantDerivative<U extends NumDimensions, R extends Elem<R,?>, S
 	}
 	
 	
-	private EinsteinTensorElem<U, SymbolicElem<R, S>, 
-		SymbolicElemFactory<R, S>> vectorWithRespectTo;
-	private U dim;
-	private DirectionalDerivativePartialFactory<R,S,K> dfac;
+	
+	private SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>, EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> tensorWithRespectTo;
+	private Z derivativeIndex;
+	private TemporaryIndexFactory<Z> temp;
+	private MetricTensorFactory<Z,R,S> metric;
+	private OrdinaryDerivativeFactory<Z,R,S> odfac;
 	
 	
 

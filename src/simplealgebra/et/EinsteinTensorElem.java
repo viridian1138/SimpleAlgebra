@@ -508,6 +508,37 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 	}
 	
 	
+	/**
+	 * @return the contravariantIndices
+	 */
+	public ArrayList<Z> getContravariantIndices() {
+		return contravariantIndices;
+	}
+
+
+	/**
+	 * @return the covariantIndices
+	 */
+	public ArrayList<Z> getCovariantIndices() {
+		return covariantIndices;
+	}
+	
+	
+	public EinsteinTensorElem<Z, R, S> regenCovar( ArrayList<Z> newCovar )
+	{
+		EinsteinTensorElem<Z, R, S> ret = new EinsteinTensorElem<Z,R,S>( fac , contravariantIndices , newCovar );
+		Iterator<ArrayList<BigInteger>> it = map.keySet().iterator();
+		while( it.hasNext() )
+		{
+			ArrayList<BigInteger> key = it.next();
+			ret.map.put(key, map.get( key ) );
+		}
+		return( ret );
+	}
+
+
+	
+	
 	
 	private final HashMap<ArrayList<BigInteger>,R> map = new HashMap<ArrayList<BigInteger>,R>();
 	
@@ -518,3 +549,4 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 	
 
 }
+

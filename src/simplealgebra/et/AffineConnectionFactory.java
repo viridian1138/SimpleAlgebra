@@ -31,6 +31,7 @@ package simplealgebra.et;
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.symbolic.SymbolicElem;
+import simplealgebra.symbolic.SymbolicElemFactory;
 
 /**
  * Factory for affine connections (also known as Christoffel symbol and/or "Gamma symbol").
@@ -57,45 +58,45 @@ public class AffineConnectionFactory<Z extends Object, R extends Elem<R,?>, S ex
 	}
 	
 	
-	public SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> 
+	public SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> 
 		getAffineConnection( Z covar1 , Z covar2 , Z contravar1 )
 	{
 		final Z p = temp.getTemp();
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> outerTerm = 
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> outerTerm = 
 				metric.getMetricTensor( false , contravar1 , p ).divideBy( 2 );
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> innerBeforeDeriv1 =
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> innerBeforeDeriv1 =
 				metric.getMetricTensor( true , p , covar1 );
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> innerBeforeDeriv2 =
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> innerBeforeDeriv2 =
 				metric.getMetricTensor( true , p , covar2 );
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> innerBeforeDeriv3 =
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> innerBeforeDeriv3 =
 				metric.getMetricTensor( true , covar1 , covar2 );
 		
 		
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> inner1 =
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> inner1 =
 				deriv.getOrdinaryDerivative( innerBeforeDeriv1 , covar2 );
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> inner2 =
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> inner2 =
 				deriv.getOrdinaryDerivative( innerBeforeDeriv2 , covar1 );
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> inner3 =
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> inner3 =
 				deriv.getOrdinaryDerivative( innerBeforeDeriv3 , p );
 		
 		
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> oi1 = outerTerm.mult( inner1 );
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> oi1 = outerTerm.mult( inner1 );
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> oi2 = outerTerm.mult( inner2 );
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> oi2 = outerTerm.mult( inner2 );
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> oi3 = outerTerm.mult( inner3 );
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> oi3 = outerTerm.mult( inner3 );
 		
 		
-		final SymbolicElem<EinsteinTensorElem<Z, R, S>, EinsteinTensorElemFactory<Z, R, S>> ret =
-				oi1.add( oi2 ).add( oi3 );
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> ret =
+				oi1.add( oi2 ).add( oi3.negate() );
 		
 		
 		return( ret );
