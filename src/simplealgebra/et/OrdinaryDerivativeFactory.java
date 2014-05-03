@@ -30,23 +30,50 @@ package simplealgebra.et;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
+import simplealgebra.NumDimensions;
+import simplealgebra.ddx.DirectionalDerivativePartialFactory;
 import simplealgebra.symbolic.SymbolicElem;
 import simplealgebra.symbolic.SymbolicElemFactory;
 
 
 /**
- * Factory for generating metric tensors as defined in General Relativity.
+ * Factory for ordinary derivative operators for a Einstein Tensor.
  * 
  * @author thorngreen
  *
  * @param <Z>
+ * @param <U>
  * @param <R>
  * @param <S>
+ * @param <K>
  */
-public abstract class OrdinaryDerivativeFactory<Z extends Object, R extends Elem<R,?>, S extends ElemFactory<R,S>> {
+public class OrdinaryDerivativeFactory<Z extends Object, U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> {
 	
-	public abstract SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> 
-		getOrdinaryDerivative( SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> term , Z derivativeIndex );
+	public OrdinaryDerivativeFactory( EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, 
+			SymbolicElemFactory<R, S>> _fac , 
+			U _dim ,
+			DirectionalDerivativePartialFactory<R,S,K> _dfac )
+	{
+		fac = _fac;
+		dim = _dim;
+		dfac = _dfac;
+	}
+	
+	public SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> 
+		getOrdinaryDerivative( SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> term , Z derivativeIndex )
+{
+		final OrdinaryDerivative<Z,U,R,S,K> ord = new OrdinaryDerivative<Z,U,R,S,K>( fac , derivativeIndex , dim , dfac );
+		
+		final SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>>
+			ret = ord.mult( term );
+		
+		return( ret );
+}
+	
+	private EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, 
+		SymbolicElemFactory<R, S>> fac;
+	private U dim;
+	private DirectionalDerivativePartialFactory<R,S,K> dfac;
 
 }
 

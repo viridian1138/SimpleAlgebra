@@ -30,6 +30,7 @@ package simplealgebra.et;
 
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
+import simplealgebra.NumDimensions;
 import simplealgebra.symbolic.SymbolicElem;
 import simplealgebra.symbolic.SymbolicElemFactory;
 
@@ -39,18 +40,20 @@ import simplealgebra.symbolic.SymbolicElemFactory;
  * @author thorngreen
  *
  * @param <Z>
+ * @param <U>
  * @param <R>
  * @param <S>
+ * @param <K>
  */
-public class AffineConnectionFactory<Z extends Object, R extends Elem<R,?>, S extends ElemFactory<R,S>> {
+public class AffineConnectionFactory<Z extends Object, U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> {
 	
 	MetricTensorFactory<Z,R,S> metric;
 	TemporaryIndexFactory<Z> temp;
-	OrdinaryDerivativeFactory<Z,R,S> deriv;
+	OrdinaryDerivativeFactory<Z,U,R,S,K> deriv;
 	
 	
 	public AffineConnectionFactory( MetricTensorFactory<Z,R,S> _metric , 
-			TemporaryIndexFactory<Z> _temp , OrdinaryDerivativeFactory<Z,R,S> _deriv )
+			TemporaryIndexFactory<Z> _temp , OrdinaryDerivativeFactory<Z,U,R,S,K> _deriv )
 	{
 		metric = _metric;
 		temp = _temp;

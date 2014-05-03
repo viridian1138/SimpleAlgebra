@@ -32,6 +32,7 @@ import java.util.Iterator;
 import simplealgebra.Elem;
 import simplealgebra.ElemFactory;
 import simplealgebra.NotInvertibleException;
+import simplealgebra.NumDimensions;
 import simplealgebra.et.AffineConnectionFactory;
 import simplealgebra.et.EinsteinTensorElem;
 import simplealgebra.et.EinsteinTensorElemFactory;
@@ -50,10 +51,12 @@ import simplealgebra.symbolic.SymbolicElemFactory;
  * @author thorngreen
  *
  * @param <Z>
+ * @param <U>
  * @param <R>
  * @param <S>
+ * @param <K>
  */
-public class CovariantDerivative<Z extends Object, R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> 
+public class CovariantDerivative<Z extends Object, U extends NumDimensions, R extends Elem<R,?>, S extends ElemFactory<R,S>, K extends Elem<?,?>> 
 		extends DerivativeElem<EinsteinTensorElem<Z,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>,EinsteinTensorElemFactory<Z,SymbolicElem<R,S>,SymbolicElemFactory<R,S>>>
 {
 
@@ -62,13 +65,14 @@ public class CovariantDerivative<Z extends Object, R extends Elem<R,?>, S extend
 		SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>> _tensorWithRespectTo,
 			TemporaryIndexFactory<Z> _temp,
 			MetricTensorFactory<Z,R,S> _metric,
-			OrdinaryDerivativeFactory<Z,R,S> _odfac )
+			U _dim ,
+			DirectionalDerivativePartialFactory<R,S,K> _dfac )
 	{
 		super( _fac );
 		tensorWithRespectTo = _tensorWithRespectTo;
 		temp = _temp;
 		metric = _metric;
-		odfac = _odfac;
+		odfac = new OrdinaryDerivativeFactory<Z,U,R,S,K>( _fac , _dim , _dfac  );
 	}
 	
 	
@@ -82,7 +86,7 @@ public class CovariantDerivative<Z extends Object, R extends Elem<R,?>, S extend
 		SymbolicElem<EinsteinTensorElem<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>,EinsteinTensorElemFactory<Z, SymbolicElem<R, S>, SymbolicElemFactory<R, S>>>
 			sum = deriv;
 		
-		AffineConnectionFactory<Z,R,S> afac = new AffineConnectionFactory<Z,R,S>( metric , 
+		AffineConnectionFactory<Z,U,R,S,K> afac = new AffineConnectionFactory<Z,U,R,S,K>( metric , 
 				temp , odfac );
 		
 		final ArrayList<Z> iCovar = tensorWithRespectTo.eval().getCovariantIndices();
@@ -137,7 +141,7 @@ public class CovariantDerivative<Z extends Object, R extends Elem<R,?>, S extend
 	private Z derivativeIndex;
 	private TemporaryIndexFactory<Z> temp;
 	private MetricTensorFactory<Z,R,S> metric;
-	private OrdinaryDerivativeFactory<Z,R,S> odfac;
+	private OrdinaryDerivativeFactory<Z,U,R,S,K> odfac;
 	
 	
 

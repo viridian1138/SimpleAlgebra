@@ -58,6 +58,11 @@ public class EinsteinTensorElemFactory<Z extends Object, R extends Elem<R,?>, S 
 		return( new EinsteinTensorElem<Z, R, S>( fac , contravariantIndices , covariantIndices ) );
 	}
 	
+	public S getFac()
+	{
+		return( fac );
+	}
+	
 	
 	@Override
 	public boolean isMultCommutative()
