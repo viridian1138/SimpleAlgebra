@@ -482,6 +482,77 @@ public class EinsteinTensorElem<Z extends Object, R extends Elem<R,?>, S extends
 			out.setVal(row, column, val);
 		}
 	}
+	
+	
+	public EinsteinTensorElem<Z, R, S> indexReduction( HashSet<Z> contravariantReduce , HashSet<Z> covariantReduce )
+	{
+		final ArrayList<Z> contravar = new ArrayList<Z>();
+		final ArrayList<Z> covar = new ArrayList<Z>();
+		
+		final ArrayList<Integer> coI = new ArrayList<Integer>();
+		
+		int cnt = 0;
+		Iterator<Z> it = contravariantIndices.iterator();
+		while( it.hasNext() )
+		{
+			Z nxt = it.next();
+			if( !( contravariantReduce.contains( nxt ) ) )
+			{
+				contravar.add( nxt );
+				coI.add( cnt );
+			}
+			cnt++;
+		}
+		
+		it = covariantIndices.iterator();
+		while( it.hasNext() )
+		{
+			Z nxt = it.next();
+			if( !( covariantReduce.contains( nxt ) ) )
+			{
+				covar.add( nxt );
+				coI.add( cnt );
+			}
+			cnt++;
+		}
+		
+		
+		EinsteinTensorElem<Z, R, S> ret = new EinsteinTensorElem<Z, R, S>( fac , contravar , covar );
+		
+		
+		Iterator<ArrayList<BigInteger>> it2 = map.keySet().iterator();
+		while( it2.hasNext() )
+		{
+			final ArrayList<BigInteger> elA = it2.next();
+			final R val = map.get( elA );
+			
+			final ArrayList<BigInteger> elB = new ArrayList<BigInteger>();
+			
+			
+			Iterator<Integer> it3 = coI.iterator();
+			while( it3.hasNext() )
+			{
+				final int ind = it3.next();
+				elB.add( elA.get( ind ) );
+			}
+			
+			
+			final R av = ret.get( elB );
+			if( av != null )
+			{
+				ret.map.put(elB, av.add(val));
+			}
+			else
+			{
+				ret.map.put(elB, val);
+			}
+			
+		}
+		
+		
+		return( ret );
+		
+	}
 
 	
 	@Override
