@@ -37,7 +37,28 @@ import simplealgebra.SquareMatrixElem;
 import simplealgebra.SquareMatrixElemFactory;
 
 /**
- * Tests inverses for a Matrix Algebra M_4(M_4(R)).  For more information see:
+ * Tests inverses for a Matrix Algebra <math display="inline">
+<mrow>
+  <msub>
+          <mi>M</mi>
+        <mn>4</mn>
+  </msub>
+  <mo>(</mo>
+  <msub>
+          <mi>M</mi>
+        <mn>4</mn>
+  </msub>
+  
+    <mrow>
+      <mo>(</mo>
+      <mi>R</mi>
+      <mo>)</mo>
+      <mo>)</mo>
+    </mrow>
+  
+</mrow>
+</math>
+.  For more information see:
  * 
  * http://en.wikipedia.org/wiki/Matrix_ring
  * 
